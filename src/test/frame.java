@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 
 public class frame extends JFrame {
 
-    JLabel timeLabel = new JLabel("002:00:00");
+    JLabel timeLabel = new JLabel("00:00:00");
     JCheckBox check2 = new JCheckBox("Tick this?");
     JButton button2 = new JButton("checkbox button");
     JComboBox<String> color = new JComboBox<>();
