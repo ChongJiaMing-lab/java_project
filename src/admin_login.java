@@ -116,15 +116,8 @@ public class admin_login extends JFrame
 
    
 
-    public static void main(String[] args) 
-    {
-        SwingUtilities.invokeLater(new Runnable() 
-        {
-            @Override
-            public void run() 
-            {
-                new admin_login().setVisible(true);
-            }
-        });
-    }
+    public static void main(String[] args) {
+    
+    new admin_login().setVisible(true);
+}
 }

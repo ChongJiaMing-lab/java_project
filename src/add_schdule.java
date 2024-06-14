@@ -241,7 +241,7 @@ class Schedule {
 
 
 public String toString() {
-    return "Bus Plate: " + busPlate + "\nFrom: " + from + "\nTo: " + to + "\nPrice: " + price;
+    return "Bus Plate: " + busPlate + "\n From: " + from + "\n To: " + to + "\n Price: " + price;
 }
 
 }
