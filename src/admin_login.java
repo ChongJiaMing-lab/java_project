@@ -76,7 +76,7 @@ public class admin_login extends JFrame
                 if (check_detail(username, password)) 
                 {
                     // If authenticated, show booking view
-                    showBookingView();
+                    
                 } 
                 else 
                 {
