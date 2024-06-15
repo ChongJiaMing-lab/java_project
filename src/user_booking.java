@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -16,8 +15,10 @@ public class user_booking extends JFrame {
     private ArrayList<JCheckBox> selected;
     private static int row=0;
     private static int col=0;
+    private ArrayList<Integer> check_row, check_col;
+    private JButton submit;
     public static void main(String[] args) {
-//	ArrayList<ArrayList<Integer>> groceryList = new ArrayList();123
+//	ArrayList<ArrayList<Integer>> groceryList = new ArrayList();
 //		
 //		ArrayList<Integer> bakeryList = new ArrayList();
 //		bakeryList.add(0);
@@ -42,7 +43,7 @@ public class user_booking extends JFrame {
 //          System.out.println("Array i:");
 //        for (int value : i) {
 //            System.out.println(value);
-//        }12
+//        }
         user_booking f = new user_booking();
         f.setSize(780, 400);
         //f.pack();
@@ -81,7 +82,8 @@ public class user_booking extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        selected = new ArrayList<>();
+        check_col = new ArrayList<>();
+        check_row = new ArrayList<>();
         for (int j = 0; j < j1.length; j++) {
             for (int k = 0; k < j1[j].length; k++) {
                 int r = j;
@@ -90,10 +92,15 @@ public class user_booking extends JFrame {
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
                     if (source.isSelected()) {
-                        selected.add(source);
+                        check_row.add(r);
+                        check_col.add(c);
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
-                        selected.remove(source);
+                         int index = check_row.indexOf(r);
+                        if (index != -1 && check_col.get(index) == c) {
+                            check_row.remove(index);
+                            check_col.remove(index);
+                        }
                         System.out.println("Checkbox at (" + r + ", " + c + ") is un-selected");
                     }
                 });
@@ -105,7 +112,17 @@ public class user_booking extends JFrame {
                 p1.add(checkBox);
             }
         }
+        JPanel p2 = new JPanel();
+        submit = new JButton("Confirm");
+        p2.add(submit);
+        
         add(p1, BorderLayout.CENTER);
+        add(p2, BorderLayout.SOUTH);
+        
+        submit.addActionListener((e) -> {
+            System.out.println("The position you have selected is :");
+            System.out.println("("+check_row+", "+check_col+")");
+        });
     }
 }
 
