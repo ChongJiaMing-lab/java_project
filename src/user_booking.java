@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -13,37 +14,13 @@ public class user_booking extends JFrame {
 
     private JCheckBox[][] j1;
     private ArrayList<JCheckBox> selected;
-    private static int row=0;
-    private static int col=0;
+    private static int row = 0;
+    private static int col = 0;
     private ArrayList<Integer> check_row, check_col;
     private JButton submit;
+    private int[][] seat;
+
     public static void main(String[] args) {
-//	ArrayList<ArrayList<Integer>> groceryList = new ArrayList();
-//		
-//		ArrayList<Integer> bakeryList = new ArrayList();
-//		bakeryList.add(0);
-//		bakeryList.add(0);
-//		bakeryList.add(0);
-//		
-//		ArrayList<Integer> produceList = new ArrayList();
-//		produceList.add(0);
-//		produceList.add(0);
-//		produceList.add(0);
-//		
-//		groceryList.add(bakeryList);
-//		groceryList.add(produceList);
-//		
-//		int[] i = new int[3];
-//
-//        // 将 ArrayList 中的整数存储到 int 数组中
-//        for (int index = 0; index < 3; index++) {
-//            i[index] = bakeryList.get(index)+1;
-//        }
-//        
-//          System.out.println("Array i:");
-//        for (int value : i) {
-//            System.out.println(value);
-//        }
         user_booking f = new user_booking();
         f.setSize(780, 400);
         //f.pack();
@@ -67,16 +44,16 @@ public class user_booking extends JFrame {
             System.out.println("row" + row);
             System.out.println("column" + col);
 
-            int[][] arr = new int[row][col];
+            seat = new int[row][col];
             Scanner s1 = new Scanner(f);
             while (s1.hasNextLine()) {
-                for (int i = 0; i < arr.length; i++) {
+                for (int i = 0; i < seat.length; i++) {
                     String[] n = s1.nextLine().split(" ");
                     for (int j = 0; j < n.length; j++) {
-                        arr[i][j] = Integer.parseInt(n[j]);
+                        seat[i][j] = Integer.parseInt(n[j]);
                     }
                 }
-                System.out.println(Arrays.deepToString(arr));
+                System.out.println(Arrays.deepToString(seat));
             }
             j1 = new JCheckBox[row][col];
         } catch (IOException e) {
@@ -88,7 +65,7 @@ public class user_booking extends JFrame {
             for (int k = 0; k < j1[j].length; k++) {
                 int r = j;
                 int c = k;
-                j1[j][k] = new JCheckBox(j+", "+k);
+                j1[j][k] = new JCheckBox(j + ", " + k);
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
                     if (source.isSelected()) {
@@ -96,7 +73,7 @@ public class user_booking extends JFrame {
                         check_col.add(c);
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
-                         int index = check_row.indexOf(r);
+                        int index = check_row.indexOf(r);
                         if (index != -1 && check_col.get(index) == c) {
                             check_row.remove(index);
                             check_col.remove(index);
@@ -115,14 +92,22 @@ public class user_booking extends JFrame {
         JPanel p2 = new JPanel();
         submit = new JButton("Confirm");
         p2.add(submit);
-        
+
         add(p1, BorderLayout.CENTER);
         add(p2, BorderLayout.SOUTH);
-        
+
         submit.addActionListener((e) -> {
-            System.out.println("The position you have selected is :");
-            System.out.println("("+check_row+", "+check_col+")");
+            confirm_selection();
         });
+
+    }
+
+    public void confirm_selection() {
+        System.out.println("The position you have selected is :");
+        System.out.println("(" + check_row + ", " + check_col + ")");
+        for (int i = 0; i < check_row.size(); i++) {
+            seat[check_row.get(i)][check_col.get(i)] = 1;
+        }
+        System.out.println(Arrays.deepToString(seat));
     }
 }
-
