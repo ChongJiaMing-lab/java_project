@@ -83,7 +83,7 @@ public class user_booking extends JFrame {
             for (int k = 0; k < j1[j].length; k++) {
                 int r = j;
                 int c = k;
-                j1[j][k] = new JCheckBox(r+", "+k);
+                j1[j][k] = new JCheckBox();
                 j1[j][k].setIcon(av);
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
