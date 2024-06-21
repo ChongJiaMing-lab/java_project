@@ -69,7 +69,7 @@ public class admin_menu extends JFrame {
         mainPanel.add(button4);
         mainPanel.add(Box.createVerticalStrut(20));
 
-        // 将主面板和顶层面板添加到框架中
+        
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
     }
