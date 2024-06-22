@@ -13,7 +13,7 @@ public class add_schdule extends JFrame {
     private List<Schedule> scheduleList = new ArrayList<>();
     private JTable scheduleTable;
     private DefaultTableModel tableModel;
-    private JButton addButton, editButton, deleteButton,returnButton;
+    private JButton addButton, editButton, deleteButton, returnButton;
     private final String FILE_NAME = "src/schdule.txt";
 
     public static void main(String[] args) {
@@ -54,6 +54,7 @@ public class add_schdule extends JFrame {
                     scheduleList.add(newSchedule);
                     updateScheduleTable();
                     saveScheduleToFile();
+                    saveScheduleToSeparateFile(newSchedule);
                 }
             }
         });
@@ -66,6 +67,7 @@ public class add_schdule extends JFrame {
                     editSchedule(selectedSchedule);
                     updateScheduleTable();
                     saveScheduleToFile();
+                    saveScheduleToSeparateFile(selectedSchedule);
                 }
             }
         });
@@ -74,9 +76,11 @@ public class add_schdule extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = scheduleTable.getSelectedRow();
                 if (selectedRow != -1) {
+                    Schedule selectedSchedule = scheduleList.get(selectedRow);
                     scheduleList.remove(selectedRow);
                     updateScheduleTable();
                     saveScheduleToFile();
+                    deleteScheduleFile(selectedSchedule);
                 }
             }
         });
@@ -114,7 +118,7 @@ public class add_schdule extends JFrame {
     }
 
     private void editSchedule(Schedule s) {
-        String newBusPlate = JOptionPane.showInputDialog(this, "Enter new bus plate:", s.getName());
+        String newBusPlate = JOptionPane.showInputDialog(this, "Enter new bus plate:", s.getBusPlate());
         if (newBusPlate != null && !newBusPlate.trim().isEmpty()) {
             String newDateStr = JOptionPane.showInputDialog(this, "Enter new date (yyyy-MM-dd):", new SimpleDateFormat("yyyy-MM-dd").format(s.getDate()));
             String newTime = JOptionPane.showInputDialog(this, "Enter new time (HH:mm):", new SimpleDateFormat("HH:mm").format(s.getDate()));
@@ -127,7 +131,7 @@ public class add_schdule extends JFrame {
             try {
                 Date newDate = dateFormat.parse(newDateStr + " " + newTime);
                 double newPrice = Double.parseDouble(newPriceStr);
-                s.setName(newBusPlate);
+                s.setBusPlate(newBusPlate);
                 s.setDate(newDate);
                 s.setFrom(newFrom);
                 s.setTo(newTo);
@@ -149,7 +153,7 @@ public class add_schdule extends JFrame {
     private void saveScheduleToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (Schedule s : scheduleList) {
-                writer.write(s.toFileString());
+                writer.write(s.toFileStringWithoutSeats());
                 writer.newLine();
                 writer.newLine();
             }
@@ -171,8 +175,26 @@ public class add_schdule extends JFrame {
             JOptionPane.showMessageDialog(this, "Error loading schedule from file: " + e.getMessage());
         }
     }
-}
 
+    private void saveScheduleToSeparateFile(Schedule s) {
+        String busPlateFileName = "src/schedule_bus/" + s.getBusPlate() + ".txt";
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(busPlateFileName))) {
+            writer.write(s.toFileString());
+            writer.newLine();
+            writer.newLine();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error saving schedule to separate file: " + e.getMessage());
+        }
+    }
+
+    private void deleteScheduleFile(Schedule s) {
+        String busPlateFileName = "src/schedule_bus/" + s.getBusPlate() + ".txt";
+        File file = new File(busPlateFileName);
+        if (file.exists() && !file.delete()) {
+            JOptionPane.showMessageDialog(this, "Error deleting schedule file for " + s.getBusPlate());
+        }
+    }
+}
 
 class Schedule {
     private String busPlate;
@@ -181,7 +203,7 @@ class Schedule {
     private String to;
     private double price;
     private int[][] seats;
-    private String status; 
+    private String status;
 
     public Schedule(String busPlate, Date date, String from, String to, double price, int[][] seats, String status) {
         this.busPlate = busPlate;
@@ -193,11 +215,11 @@ class Schedule {
         this.status = status;
     }
 
-    public String getName() {
+    public String getBusPlate() {
         return busPlate;
     }
 
-    public void setName(String busPlate) {
+    public void setBusPlate(String busPlate) {
         this.busPlate = busPlate;
     }
 
@@ -277,6 +299,18 @@ class Schedule {
         return sb.toString().trim();
     }
 
+    public String toFileStringWithoutSeats() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        StringBuilder sb = new StringBuilder();
+        sb.append(busPlate).append(System.lineSeparator());
+        sb.append(dateFormat.format(date)).append(System.lineSeparator());
+        sb.append(from).append(System.lineSeparator());
+        sb.append(to).append(System.lineSeparator());
+        sb.append(price).append(System.lineSeparator());
+        sb.append(status).append(System.lineSeparator());
+        return sb.toString().trim();
+    }
+
     public static Schedule fromFileString(BufferedReader reader) {
         try {
             String busPlate = reader.readLine();
@@ -312,6 +346,4 @@ class Schedule {
         }
         return null;
     }
-
-   
 }
