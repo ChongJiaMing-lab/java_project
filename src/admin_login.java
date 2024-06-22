@@ -75,7 +75,7 @@ public class admin_login extends JFrame
                 int result = check_detail(username, password);
                 if (result == 1) 
                 {
-                    // If authenticated, show booking view
+                    
                     admin_menu admin_menu = new admin_menu();
                     admin_menu.setVisible(true);
                     dispose();
