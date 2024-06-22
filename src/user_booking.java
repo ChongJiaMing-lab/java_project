@@ -26,11 +26,14 @@ public class user_booking extends JFrame {
     private int[][] seat;
     ImageIcon seat_select, av, unav;
     private JTable j;
-    String[] info = new String[6];
+    private String[] info = new String[6];
+    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t;
+    private double price;
+    private JTextField t1, t2, t3, t4;
 
     public static void main(String[] args) {
         user_booking f = new user_booking();
-        f.setSize(1000, 700);
+        f.setSize(800, 700);
         //f.pack();
         f.setTitle("User Booking");
         f.setVisible(true);
@@ -61,6 +64,7 @@ public class user_booking extends JFrame {
             info[2] = s.nextLine();
             info[3] = s.nextLine();
             info[4] = s.nextLine();
+            price = Double.parseDouble(info[4]);
             info[5] = s.nextLine();
             while (s.hasNextLine()) {
                 row++;
@@ -145,7 +149,6 @@ public class user_booking extends JFrame {
                 p1.add(checkBox);
             }
         }
-
         JLayeredPane lp = new JLayeredPane();
         lp.setPreferredSize(new Dimension(500, 500));
         p1.setBounds(30, 42, 300, 480);
@@ -179,12 +182,48 @@ public class user_booking extends JFrame {
         op.setOpaque(false);
         lp.add(op, JLayeredPane.PALETTE_LAYER);
 
-        JPanel p2 = new JPanel();
+        Font f1 = new Font("Calibri", Font.ITALIC, 40);
+
+        t = new JLabel("Book a Seat");
+        t.setFont(f1);
+        JPanel title = new JPanel();
+        title.add(t);
+
+        JPanel p2 = new JPanel(new GridLayout(2, 1));
+        JPanel sp2 = new JPanel();
+        lb1 = new JLabel("Available");
+        lb2 = new JLabel("Unavailable");
+        lb3 = new JLabel("Ticket Price : RM" + price);
+        sp2.add(lb1);
+        sp2.add(lb2);
+        sp2.add(lb3);
+        JPanel sp22 = new JPanel(new GridLayout(4, 2));
+        lb4 = new JLabel("Travel Insurance?(RM2)");
+        lb5 = new JLabel("Total Passenger");
+        lb6 = new JLabel("SubTotal:");
+        lb7 = new JLabel("Total:");
+        t1 = new JTextField(10);
+        t2 = new JTextField(10);
+        t3 = new JTextField(10);
+        t4 = new JTextField(10);
+        sp22.add(lb4);
+        sp22.add(t1);
+        sp22.add(lb5);
+        sp22.add(t2);
+        sp22.add(lb6);
+        sp22.add(t3);
+        sp22.add(lb7);
+        sp22.add(t4);
         submit = new JButton("Confirm");
-        p2.add(submit);
+        p2.add(sp2);
+        p2.add(sp22);
+        p2.setBounds(10, 50, 100, 30); 
+        JPanel pp = new JPanel();
+        pp.add(submit);
         add(lp, BorderLayout.WEST);
-        add(p2, BorderLayout.EAST);
-        add(p3, BorderLayout.SOUTH);
+        add(title, BorderLayout.NORTH);
+        add(p2, BorderLayout.CENTER);
+        add(pp, BorderLayout.EAST);
         submit.addActionListener((e) -> {
             confirm_selection();
         });
@@ -203,14 +242,14 @@ public class user_booking extends JFrame {
 
             for (int m = 0; m < 6; m++) {
                 book.write(info[m]);
-                book.newLine(); 
+                book.newLine();
             }
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
-                    if (j > 0) { 
+                    if (j > 0) {
                         book.write(" ");
                     }
-                    book.write(String.valueOf(seat[i][j])); 
+                    book.write(String.valueOf(seat[i][j]));
                 }
                 book.newLine();
             }
