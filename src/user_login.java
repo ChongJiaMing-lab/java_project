@@ -91,6 +91,7 @@ public class user_login extends JFrame implements ActionListener{
         add(pAlert,BorderLayout.SOUTH);
         
         bt1.addActionListener(this);
+        bt2.addActionListener(this);
     }
     
     public boolean checkMail(String mail,String password)
@@ -138,7 +139,9 @@ public class user_login extends JFrame implements ActionListener{
         else if(checkMail(email,password))
         {
             lb3.setText(" ");
-            System.out.println("Success");
+            search u2 = new search();
+            u2.setVisible(true);
+            dispose();
         }
         else
         {
@@ -146,9 +149,11 @@ public class user_login extends JFrame implements ActionListener{
         }
         }
         
-        else if(e.getSource()==bt2)
+        else if(e.getSource()== bt2)
         {
-            
+            user_register u2 = new user_register();
+            u2.setVisible(true);
+            dispose();
         }
     }
 }

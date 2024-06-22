@@ -54,7 +54,12 @@ public class main_menu extends JFrame {
             dispose();
         });
         JButton button2 = new JButton("User");
-        
+        button2.addActionListener(e -> {
+
+            user_login login2 = new user_login();   
+            login2.setVisible(true);  
+            dispose();
+        });
 
 
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
