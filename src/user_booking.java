@@ -1,20 +1,23 @@
+
 import javax.swing.*;
 import java.awt.*;
 import static java.awt.image.ImageObserver.ABORT;
 import static java.awt.image.ImageObserver.HEIGHT;
 import static java.awt.image.ImageObserver.WIDTH;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class user_booking extends JFrame {
 
-    static int choice=1;
+    static int choice = 1;
     private JCheckBox[][] j1;
     private static int row = 0;
     private static int col = 0;
@@ -22,6 +25,7 @@ public class user_booking extends JFrame {
     private JButton submit;
     private int[][] seat;
     ImageIcon seat_select, av, unav;
+
     public static void main(String[] args) {
         user_booking f = new user_booking();
         f.setSize(1000, 700);
@@ -35,18 +39,18 @@ public class user_booking extends JFrame {
         seat_select = new ImageIcon("src/image/seat_select.png");
         av = new ImageIcon("src/image/seat_av.png");
         unav = new ImageIcon("src/image/seat_unav.png");
-        
+
         Image seat_i = seat_select.getImage();
         Image img1 = seat_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        seat_select =  new ImageIcon(img1);
-        
+        seat_select = new ImageIcon(img1);
+
         Image av_i = av.getImage();
         Image img2 = av_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        av =  new ImageIcon(img2);
-        
+        av = new ImageIcon(img2);
+
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        unav =  new ImageIcon(img3);
+        unav = new ImageIcon(img3);
         File f = new File("seat.txt");
         try {
             Scanner s = new Scanner(f);
@@ -83,8 +87,14 @@ public class user_booking extends JFrame {
             for (int k = 0; k < j1[j].length; k++) {
                 int r = j;
                 int c = k;
-                j1[j][k] = new JCheckBox(r+", "+k);
+                j1[j][k] = new JCheckBox(r + ", " + k);
+                if(seat[j][k] == 1){
+                    j1[j][k].setIcon(unav);
+                    j1[j][k].setEnabled(false);
+                }
+                else{
                 j1[j][k].setIcon(av);
+                }
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
                     if (source.isSelected()) {
@@ -92,7 +102,7 @@ public class user_booking extends JFrame {
                         check_col.add(c);
                         j1[r][c].setIcon(seat_select);
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
-                    } else{
+                    } else {
                         int index = check_row.indexOf(r);
                         if (index != -1 && check_col.get(index) == c) {
                             check_row.remove(index);
@@ -104,20 +114,20 @@ public class user_booking extends JFrame {
                 });
             }
         }
-        
+
         JPanel p1 = new JPanel(new GridLayout(row, col));
         for (JCheckBox[] r : j1) {
             for (JCheckBox checkBox : r) {
-                p1.add(checkBox);   
+                p1.add(checkBox);
             }
         }
-        
+
         JLayeredPane lp = new JLayeredPane();
         lp.setPreferredSize(new Dimension(500, 500));
         p1.setBounds(30, 42, 300, 480);
         lp.add(p1, JLayeredPane.DEFAULT_LAYER);
-        
-         JPanel op = new JPanel() {
+
+        JPanel op = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -140,11 +150,11 @@ public class user_booking extends JFrame {
                 g2.drawLine(in + width, in, in + width, in + height);//right
             }
         };
-         
+
         op.setBounds(20, 0, 275, 600);
         op.setOpaque(false);
         lp.add(op, JLayeredPane.PALETTE_LAYER);
-        
+
         JPanel p2 = new JPanel();
         submit = new JButton("Confirm");
         p2.add(submit);
@@ -153,9 +163,8 @@ public class user_booking extends JFrame {
         submit.addActionListener((e) -> {
             confirm_selection();
         });
-
     }
-    
+
     public void confirm_selection() {
         System.out.println("The position you have selected is :");
         System.out.println("(" + check_row + ", " + check_col + ")");
@@ -163,6 +172,26 @@ public class user_booking extends JFrame {
             seat[check_row.get(i)][check_col.get(i)] = 1;
         }
         System.out.println(Arrays.deepToString(seat));
+        try {
+            FileWriter write = new FileWriter("seat.txt");
+            BufferedWriter book = new BufferedWriter(write);
+
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < col; j++) {
+                    if (j > 0) { // 如果不是第一个数字，则先写入一个空格
+                        book.write(" ");
+                    }
+                    book.write(String.valueOf(seat[i][j])); // 将数字转换为字符串后写入
+                }
+                book.newLine(); // 写入一个换行符，每行数据写完后换行
+            }
+            book.close();
+            System.out.println("Success to book the seat.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
     }
 }
 
@@ -170,7 +199,7 @@ class DrawPanel extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
-       g.drawRect(1,1,100,100);
+
+        g.drawRect(1, 1, 100, 100);
     }
 }
