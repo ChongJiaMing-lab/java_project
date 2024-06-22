@@ -181,7 +181,7 @@ public class add_schdule extends JFrame {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(busPlateFileName))) {
             writer.write(s.toFileString());
             writer.newLine();
-            writer.newLine();
+          
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving schedule to separate file: " + e.getMessage());
         }
