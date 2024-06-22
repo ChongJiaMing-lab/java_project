@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +11,9 @@ import java.util.List;
 
 public class add_schdule extends JFrame {
     private List<Schedule> scheduleList = new ArrayList<>();
-    private JList<Schedule> scheduleJList;
-    private DefaultListModel<Schedule> listModel;
-    private JButton addButton, editButton, deleteButton;
+    private JTable scheduleTable;
+    private DefaultTableModel tableModel;
+    private JButton addButton, editButton, deleteButton,returnButton;
     private final String FILE_NAME = "src/schdule.txt";
 
     public static void main(String[] args) {
@@ -28,19 +29,22 @@ public class add_schdule extends JFrame {
     }
 
     private void initComponents() {
-        listModel = new DefaultListModel<>();
-        scheduleJList = new JList<>(listModel);
+        String[] columnNames = {"Bus Plate", "Date", "From", "To", "Price", "Status"};
+        tableModel = new DefaultTableModel(columnNames, 0);
+        scheduleTable = new JTable(tableModel);
         addButton = new JButton("Add Schedule");
         editButton = new JButton("Edit Schedule");
         deleteButton = new JButton("Delete Schedule");
+        returnButton = new JButton("Go Back");
 
         setLayout(new BorderLayout());
         JPanel controlPanel = new JPanel(new FlowLayout());
         controlPanel.add(addButton);
         controlPanel.add(editButton);
         controlPanel.add(deleteButton);
+        controlPanel.add(returnButton);
 
-        add(new JScrollPane(scheduleJList), BorderLayout.CENTER);
+        add(new JScrollPane(scheduleTable), BorderLayout.CENTER);
         add(controlPanel, BorderLayout.SOUTH);
 
         addButton.addActionListener(new ActionListener() {
@@ -48,7 +52,7 @@ public class add_schdule extends JFrame {
                 Schedule newSchedule = createNewSchedule();
                 if (newSchedule != null) {
                     scheduleList.add(newSchedule);
-                    updateScheduleList();
+                    updateScheduleTable();
                     saveScheduleToFile();
                 }
             }
@@ -56,10 +60,11 @@ public class add_schdule extends JFrame {
 
         editButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Schedule selectedSchedule = scheduleJList.getSelectedValue();
-                if (selectedSchedule != null) {
+                int selectedRow = scheduleTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    Schedule selectedSchedule = scheduleList.get(selectedRow);
                     editSchedule(selectedSchedule);
-                    updateScheduleList();
+                    updateScheduleTable();
                     saveScheduleToFile();
                 }
             }
@@ -67,10 +72,10 @@ public class add_schdule extends JFrame {
 
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Schedule selectedSchedule = scheduleJList.getSelectedValue();
-                if (selectedSchedule != null) {
-                    scheduleList.remove(selectedSchedule);
-                    updateScheduleList();
+                int selectedRow = scheduleTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    scheduleList.remove(selectedRow);
+                    updateScheduleTable();
                     saveScheduleToFile();
                 }
             }
@@ -134,22 +139,19 @@ public class add_schdule extends JFrame {
         }
     }
 
-    private void updateScheduleList() {
-        listModel.clear();
+    private void updateScheduleTable() {
+        tableModel.setRowCount(0);
         for (Schedule s : scheduleList) {
-            listModel.addElement(s);
+            tableModel.addRow(s.toTableRow());
         }
     }
 
     private void saveScheduleToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (int i = 0; i < scheduleList.size(); i++) {
-                Schedule s = scheduleList.get(i);
+            for (Schedule s : scheduleList) {
                 writer.write(s.toFileString());
-                if (i < scheduleList.size() - 1) {
-                    writer.newLine(); 
-                    writer.newLine();
-                }
+                writer.newLine();
+                writer.newLine();
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving schedule to file: " + e.getMessage());
@@ -162,7 +164,7 @@ public class add_schdule extends JFrame {
             while ((s = Schedule.fromFileString(reader)) != null) {
                 scheduleList.add(s);
             }
-            updateScheduleList();
+            updateScheduleTable();
         } catch (FileNotFoundException e) {
             JOptionPane.showMessageDialog(this, "File not found: " + e.getMessage());
         } catch (IOException e) {
@@ -252,6 +254,10 @@ class Schedule {
         return dateFormat.format(date);
     }
 
+    public String[] toTableRow() {
+        return new String[]{busPlate, getDateStr(), from, to, String.valueOf(price), status};
+    }
+
     public String toFileString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         StringBuilder sb = new StringBuilder();
@@ -260,7 +266,7 @@ class Schedule {
         sb.append(from).append(System.lineSeparator());
         sb.append(to).append(System.lineSeparator());
         sb.append(price).append(System.lineSeparator());
-        sb.append(status).append(System.lineSeparator()); 
+        sb.append(status).append(System.lineSeparator());
         for (int[] row : seats) {
             for (int seat : row) {
                 sb.append(seat).append(" ");
@@ -275,64 +281,37 @@ class Schedule {
         try {
             String busPlate = reader.readLine();
             if (busPlate == null || busPlate.trim().isEmpty()) {
-                return null; 
+                return null;
             }
 
             String dateStr = reader.readLine();
             String from = reader.readLine();
             String to = reader.readLine();
             String priceStr = reader.readLine();
-            String status = reader.readLine(); 
+            String status = reader.readLine();
 
-            // Validate date and price
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date;
-            double price;
-
-            try {
-                date = dateFormat.parse(dateStr);
-            } catch (Exception e) {
-                System.err.println("Invalid date format: " + dateStr);
-                return null;
-            }
-
-            try {
-                price = Double.parseDouble(priceStr);
-            } catch (NumberFormatException e) {
-                System.err.println("Invalid price format: " + priceStr);
-                return null;
-            }
+            Date date = dateFormat.parse(dateStr);
+            double price = Double.parseDouble(priceStr);
 
             List<int[]> seatList = new ArrayList<>();
             String line;
             while ((line = reader.readLine()) != null && !line.trim().isEmpty()) {
-                if (line.matches("\\d+( \\d+)*")) {
-                    String[] seatRow = line.trim().split(" ");
-                    int[] row = new int[seatRow.length];
-                    for (int j = 0; j < seatRow.length; j++) {
-                        try {
-                            row[j] = Integer.parseInt(seatRow[j]);
-                        } catch (NumberFormatException e) {
-                            System.err.println("Invalid seat format: " + seatRow[j]);
-                            return null;
-                        }
-                    }
-                    seatList.add(row);
-                } else {
-                    break;
+                String[] seatRow = line.trim().split(" ");
+                int[] row = new int[seatRow.length];
+                for (int j = 0; j < seatRow.length; j++) {
+                    row[j] = Integer.parseInt(seatRow[j]);
                 }
+                seatList.add(row);
             }
 
             int[][] seats = seatList.toArray(new int[0][]);
             return new Schedule(busPlate, date, from, to, price, seats, status);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public String toString() {
-        return "Bus Plate: " + busPlate + ", Date: " + getDateStr() + ", From: " + from + ", To: " + to + ", Price: " + price + ", Status: " + status;
-    }
-
+   
 }
