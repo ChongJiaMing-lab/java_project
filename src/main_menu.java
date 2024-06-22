@@ -16,6 +16,7 @@ public class main_menu extends JFrame {
     
     public main_menu()
     {
+        
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
 
