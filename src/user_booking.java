@@ -193,12 +193,12 @@ public class user_booking extends JFrame {
 
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
-                    if (j > 0) { // 如果不是第一个数字，则先写入一个空格
+                    if (j > 0) {
                         book.write(" ");
                     }
-                    book.write(String.valueOf(seat[i][j])); // 将数字转换为字符串后写入
+                    book.write(String.valueOf(seat[i][j])); 
                 }
-                book.newLine(); // 写入一个换行符，每行数据写完后换行
+                book.newLine(); 
             }
             book.close();
             System.out.println("Success to book the seat.");
