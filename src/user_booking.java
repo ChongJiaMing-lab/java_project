@@ -26,6 +26,7 @@ public class user_booking extends JFrame {
     private int[][] seat;
     ImageIcon seat_select, av, unav;
     private JTable j;
+    String[] info = new String[6];
 
     public static void main(String[] args) {
         user_booking f = new user_booking();
@@ -55,7 +56,12 @@ public class user_booking extends JFrame {
         File f = new File("seat.txt");
         try {
             Scanner s = new Scanner(f);
-
+            info[0] = s.nextLine();
+            info[1] = s.nextLine();
+            info[2] = s.nextLine();
+            info[3] = s.nextLine();
+            info[4] = s.nextLine();
+            info[5] = s.nextLine();
             while (s.hasNextLine()) {
                 row++;
                 String[] line = s.nextLine().trim().split(" ");
@@ -68,7 +74,12 @@ public class user_booking extends JFrame {
 
             seat = new int[row][col];
             Scanner s1 = new Scanner(f);
+            String a;
+            for (int i = 0; i < 6; i++) {
+                a = s1.nextLine();
+            }
             while (s1.hasNextLine()) {
+
                 for (int i = 0; i < seat.length; i++) {
                     String[] n = s1.nextLine().split(" ");
                     for (int j = 0; j < n.length; j++) {
@@ -89,12 +100,11 @@ public class user_booking extends JFrame {
                 int r = j;
                 int c = k;
                 j1[j][k] = new JCheckBox(r + ", " + k);
-                if(seat[j][k] == 1){
+                if (seat[j][k] == 1) {
                     j1[j][k].setIcon(unav);
                     j1[j][k].setEnabled(false);
-                }
-                else{
-                j1[j][k].setIcon(av);
+                } else {
+                    j1[j][k].setIcon(av);
                 }
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
@@ -116,13 +126,13 @@ public class user_booking extends JFrame {
             }
         }
         String[][] data = {
-            { "Kundan Kumar Jha", "4031", "CSE" },
-            { "Anand Jha", "6014", "IT" }
+            {"Kundan Kumar Jha", "4031", "CSE"},
+            {"Anand Jha", "6014", "IT"}
         };
- 
+
         // Column Names
-        String[] columnNames = { "Name", "Roll Number", "Department" };
- 
+        String[] columnNames = {"Name", "Roll Number", "Department"};
+
         // Initializing the JTable
         j = new JTable(data, columnNames);
         JPanel p3 = new JPanel();
@@ -191,14 +201,18 @@ public class user_booking extends JFrame {
             FileWriter write = new FileWriter("seat.txt");
             BufferedWriter book = new BufferedWriter(write);
 
+            for (int m = 0; m < 6; m++) {
+                book.write(info[m]);
+                book.newLine(); 
+            }
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < col; j++) {
-                    if (j > 0) {
+                    if (j > 0) { 
                         book.write(" ");
                     }
                     book.write(String.valueOf(seat[i][j])); 
                 }
-                book.newLine(); 
+                book.newLine();
             }
             book.close();
             System.out.println("Success to book the seat.");
