@@ -7,15 +7,17 @@ import java.awt.event.ActionListener;
 public class admin_menu extends JFrame {
 
     public static void main(String[] args) {
-        admin_menu adminMenu = new admin_menu();
-        adminMenu.setTitle("Admin Menu");
-        adminMenu.setSize(800, 600);
-        adminMenu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        adminMenu.setVisible(true);
+         SwingUtilities.invokeLater(() -> new admin_menu().setVisible(true));
     }
 
     public admin_menu() {
-
+        
+        
+        setTitle("Admin Menu");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setBackground(Color.WHITE);
 
@@ -54,10 +56,17 @@ public class admin_menu extends JFrame {
         button1.addActionListener(e -> {
 
             add_schdule addScheduleWindow = new add_schdule();   
-            addScheduleWindow.setVisible(true);  
+            addScheduleWindow.setVisible(true);
+            dispose();
         });
         JButton button2 = new JButton("View/edit seat");
         JButton button3 = new JButton("View user information");
+        button3.addActionListener(e -> {
+
+            View_Customer_information vui = new View_Customer_information();   
+            vui.setVisible(true);
+            dispose();
+        });
         JButton button4 = new JButton("View user booking");
 
 

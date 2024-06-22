@@ -12,14 +12,17 @@ import java.util.Vector;
 public class View_Customer_information extends JFrame{
     private JTable cs_table;
      public static void main(String[] args) {
-        View_Customer_information cs = new View_Customer_information();
-        cs.setTitle("Main Menu");
-        cs.setSize(800, 600);
-        cs.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        cs.setVisible(true);
+          SwingUtilities.invokeLater(() -> new View_Customer_information().setVisible(true));
     } 
      
     public View_Customer_information(){
+        
+         
+            setTitle("Main Menu");
+            setSize(800, 600);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         
+            
             JPanel toppanel = new JPanel(new BorderLayout());
             toppanel.setBackground(Color.WHITE);
             
