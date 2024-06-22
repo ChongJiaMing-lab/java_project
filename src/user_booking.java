@@ -25,6 +25,7 @@ public class user_booking extends JFrame {
     private JButton submit;
     private int[][] seat;
     ImageIcon seat_select, av, unav;
+    private JTable j;
 
     public static void main(String[] args) {
         user_booking f = new user_booking();
@@ -114,7 +115,20 @@ public class user_booking extends JFrame {
                 });
             }
         }
-
+        String[][] data = {
+            { "Kundan Kumar Jha", "4031", "CSE" },
+            { "Anand Jha", "6014", "IT" }
+        };
+ 
+        // Column Names
+        String[] columnNames = { "Name", "Roll Number", "Department" };
+ 
+        // Initializing the JTable
+        j = new JTable(data, columnNames);
+        JPanel p3 = new JPanel();
+        // adding it to JScrollPane
+        JScrollPane sp = new JScrollPane(j);
+//        p3.add(sp);
         JPanel p1 = new JPanel(new GridLayout(row, col));
         for (JCheckBox[] r : j1) {
             for (JCheckBox checkBox : r) {
@@ -160,6 +174,7 @@ public class user_booking extends JFrame {
         p2.add(submit);
         add(lp, BorderLayout.WEST);
         add(p2, BorderLayout.EAST);
+        add(p3, BorderLayout.SOUTH);
         submit.addActionListener((e) -> {
             confirm_selection();
         });
