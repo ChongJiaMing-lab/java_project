@@ -35,7 +35,7 @@ public class admin_login extends JFrame
         topPanel.add(titleLabel, BorderLayout.CENTER);
 
       
-         JLabel logoLabel = new JLabel();
+        JLabel logoLabel = new JLabel();
         ImageIcon logoIcon = new ImageIcon("src/image/admin.png"); 
         Image logoImage = logoIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH); 
         logoLabel.setIcon(new ImageIcon(logoImage));
@@ -66,30 +66,38 @@ public class admin_login extends JFrame
        
         loginButton.addActionListener(new ActionListener() 
         {
-            @Override
+            
             public void actionPerformed(ActionEvent e) 
             {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
 
-                // Check credentials
-                if (check_detail(username, password)) 
+                int result = check_detail(username, password);
+                if (result == 1) 
                 {
                     // If authenticated, show booking view
-                    
+                    admin_menu admin_menu = new admin_menu();
+                    admin_menu.setVisible(true);
+                    dispose();
                 } 
-                else 
+                else if (result == -1)
                 {
-                    // Show error message
-                    JOptionPane.showMessageDialog(admin_login.this, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(admin_login.this, "Invalid username ", "Login Error", JOptionPane.ERROR_MESSAGE);
                 }
+                else if (result == -2)
+                {
+                    JOptionPane.showMessageDialog(admin_login.this, "Invalid password", "Login Error", JOptionPane.ERROR_MESSAGE);
+                }
+                
             }
         });
     }
 
-    private boolean check_detail(String username, String password) 
+    private int check_detail(String username, String password) 
     {
         String filePath = "src/admin_infor.txt";
+        
+        
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) 
         {
             String line;
@@ -100,10 +108,18 @@ public class admin_login extends JFrame
                 {
                     String fileUsername = parts[0];
                     String filePassword = parts[1];
-                    if (fileUsername.equals(username) && filePassword.equals(password)) 
+                    if (fileUsername.equals(username)) 
                     {
-                        return true;
+                         if (filePassword.equals(password)) 
+                         {
+                            return 1; 
+                        } else 
+                         {
+                            return -2; 
+                        }
                     }
+                   
+                    
                 }
             }
         } 
@@ -111,7 +127,7 @@ public class admin_login extends JFrame
         {
             e.printStackTrace();
         }
-        return false;
+        return -1;
     }
 
    

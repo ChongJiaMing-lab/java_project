@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class admin_menu extends JFrame {
 
@@ -48,6 +51,11 @@ public class admin_menu extends JFrame {
 
 
         JButton button1 = new JButton("Add and view schedule");
+        button1.addActionListener(e -> {
+
+            add_schdule addScheduleWindow = new add_schdule();   
+            addScheduleWindow.setVisible(true);  
+        });
         JButton button2 = new JButton("View/edit seat");
         JButton button3 = new JButton("View user information");
         JButton button4 = new JButton("View user booking");
@@ -61,16 +69,19 @@ public class admin_menu extends JFrame {
    
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button1);
-        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button2);
-        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button3);
-        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button4);
         mainPanel.add(Box.createVerticalStrut(20));
 
         
         add(topPanel, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
-    }
+        
+        
+    
+}
 }
