@@ -18,6 +18,7 @@ public class create_write_txt {
       try {
       FileWriter myWriter = new FileWriter("filename.txt");
       myWriter.write("Files in Java might be tricky, but it is fun enough!");
+      myWriter.write("Files in Java might be tricky, but it is fun enough123!");
       myWriter.close();
       System.out.println("Successfully wrote to the file.");
     } catch (IOException e) {
