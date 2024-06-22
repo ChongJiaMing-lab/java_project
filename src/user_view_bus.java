@@ -1,6 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import com.toedter.calendar.JDateChooser;
+//import com.toedter.calendar.JDateChooser;
 
 public class user_view_bus extends JFrame {
 
@@ -8,10 +8,10 @@ public class user_view_bus extends JFrame {
     private JComboBox<String> point;
     private JLabel title;
     private JLabel lb1,lb2;
-    Calendar c = new Calendar();
+//    Calendar c = new Calendar();
     public static void main(String[] args) {
         user_view_bus f = new user_view_bus();
-        f.setSize(1000, 700); // 适当调整窗口大小
+        f.setSize(1000, 700);
         f.setTitle("User Booking");
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

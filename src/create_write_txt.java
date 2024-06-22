@@ -24,16 +24,16 @@ public class create_write_txt {
             
           for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (j > 0) { // 如果不是第一个数字，则先写入一个空格
+                    if (j > 0) {
                         myWriter.write(" ");
                     }
-                    myWriter.write("0"); // 写入数字
+                    myWriter.write("0"); 
                 }
-                myWriter.newLine(); // 写入一个换行符，每行数据写完后换行
+                myWriter.newLine();
             }
 
             myWriter.write("Files in Java might be tricky, but it is fun enou111gh!");
-            myWriter.newLine(); // 写入一个换行符
+            myWriter.newLine(); 
             myWriter.write("Files in Java might be tricky, but it is fun enough1213!");
 
             myWriter.close();
