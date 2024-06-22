@@ -56,7 +56,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-        File f = new File("seat.txt");
+        File f = new File("src/schedule_bus/WEQ 6443.txt");
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -198,26 +198,55 @@ public class user_booking extends JFrame {
         sp2.add(lb2);
         sp2.add(lb3);
         JPanel sp22 = new JPanel(new GridLayout(4, 2));
-        lb4 = new JLabel("Travel Insurance?(RM2)");
-        lb5 = new JLabel("Total Passenger");
-        lb6 = new JLabel("SubTotal:");
-        lb7 = new JLabel("Total:");
-        t1 = new JTextField(10);
-        t2 = new JTextField(10);
-        t3 = new JTextField(10);
-        t4 = new JTextField(10);
-        sp22.add(lb4);
-        sp22.add(t1);
-        sp22.add(lb5);
-        sp22.add(t2);
-        sp22.add(lb6);
-        sp22.add(t3);
-        sp22.add(lb7);
-        sp22.add(t4);
         submit = new JButton("Confirm");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // 设置组件之间的间距
+
+        // 添加标签和文本框
+        JLabel lb1 = new JLabel("Travel Insurance?(RM2):");
+        JTextField t1 = new JTextField(10);
+        JLabel lb2 = new JLabel("Total Passenger:");
+        JTextField t2 = new JTextField(10);
+        JLabel lb3 = new JLabel("SubTotal:");
+        JTextField t3 = new JTextField(10);
+        JLabel lb4 = new JLabel("Total:");
+        JTextField t4 = new JTextField(10);
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        sp22.add(lb1, gbc);
+
+        gbc.gridx = 1;
+        sp22.add(t1, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        sp22.add(lb2, gbc);
+
+        gbc.gridx = 1;
+        sp22.add(t2, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        sp22.add(lb3, gbc);
+
+        gbc.gridx = 1;
+        sp22.add(t3, gbc);
+
+        gbc.gridx = 100;
+        gbc.gridy = 3;
+        sp22.add(lb4, gbc);
+
+        gbc.gridx = 1;
+        sp22.add(t4, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2; // 指定按钮跨两列
+        gbc.fill = GridBagConstraints.HORIZONTAL; // 填充水平空间
+        gbc.anchor = GridBagConstraints.CENTER; // 居中对齐
         p2.add(sp2);
         p2.add(sp22);
-        p2.setBounds(10, 50, 100, 30); 
         JPanel pp = new JPanel();
         pp.add(submit);
         add(lp, BorderLayout.WEST);
