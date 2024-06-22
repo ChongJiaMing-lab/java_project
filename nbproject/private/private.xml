@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/admin_infor.txt</file>
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/create_write_txt.java</file>
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/add_schdule.java</file>
@@ -13,6 +14,11 @@
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/admin_editseat.java</file>
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/image/seat_select.png</file>
             <file>file:/C:/Users/elysa/Desktop/MMU/sem%205/JAVA/project-git/java_project/src/image/seat_av.png</file>
+=======
+            <file>file:/C:/Users/zhang/OneDrive/Desktop/java/java-github111/java_project/src/create_write_txt.java</file>
+            <file>file:/C:/Users/zhang/OneDrive/Desktop/java/java-github111/java_project/src/user_booking.java</file>
+            <file>file:/C:/Users/zhang/OneDrive/Desktop/java/java-github111/java_project/src/user_view_bus.java</file>
+>>>>>>> dcd28a2eaaaadc0eb3d8830b43d890fd166a3fb7
         </group>
     </open-files>
 </project-private>
