@@ -36,7 +36,12 @@ public class add_schdule extends JFrame {
         editButton = new JButton("Edit Schedule");
         deleteButton = new JButton("Delete Schedule");
         returnButton = new JButton("Go Back");
+        returnButton.addActionListener(e -> {
 
+            admin_menu menu = new admin_menu();   
+            menu.setVisible(true);  
+            dispose();
+        });
         setLayout(new BorderLayout());
         JPanel controlPanel = new JPanel(new FlowLayout());
         controlPanel.add(addButton);
@@ -181,7 +186,7 @@ public class add_schdule extends JFrame {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(busPlateFileName))) {
             writer.write(s.toFileString());
             writer.newLine();
-            writer.newLine();
+          
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving schedule to separate file: " + e.getMessage());
         }

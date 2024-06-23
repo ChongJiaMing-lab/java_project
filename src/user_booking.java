@@ -56,7 +56,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-        File f = new File("src/schedule_bus/WEQ 6443.txt");
+        File f = new File("src/schedule_bus/a1.txt");
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -197,6 +197,7 @@ public class user_booking extends JFrame {
         sp2.add(lb1);
         sp2.add(lb2);
         sp2.add(lb3);
+        p3.add(lb1);
         JPanel sp22 = new JPanel(new GridLayout(4, 2));
         submit = new JButton("Confirm");
         GridBagConstraints gbc = new GridBagConstraints();
@@ -253,6 +254,7 @@ public class user_booking extends JFrame {
         add(title, BorderLayout.NORTH);
         add(p2, BorderLayout.CENTER);
         add(pp, BorderLayout.EAST);
+        add(p3, BorderLayout.SOUTH);
         submit.addActionListener((e) -> {
             confirm_selection();
         });
@@ -266,9 +268,9 @@ public class user_booking extends JFrame {
         }
         System.out.println(Arrays.deepToString(seat));
         try {
-            FileWriter write = new FileWriter("seat.txt");
+            FileWriter write = new FileWriter("src/schedule_bus/a1.txt");
             BufferedWriter book = new BufferedWriter(write);
-
+ 
             for (int m = 0; m < 6; m++) {
                 book.write(info[m]);
                 book.newLine();
