@@ -80,7 +80,6 @@ public class viewSchdule extends JFrame implements ActionListener{
             while ((s = Schedule.fromFileString(reader)) != null) {
                 if(from.equals(s.getFrom())&&to.equals(s.getTo())&& dateFormat.format(date).equals(s.getDateStr()))
                 {
-                    
                     scheduleList.add(s);
                 }
             }
