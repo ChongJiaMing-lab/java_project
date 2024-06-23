@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 
 public class main_menu extends JFrame {
     
+    // 在其他类中使用静态变量或方法
+CurrentUser.setUserId(userId);
+String userId = CurrentUser.getUserId();
+
     public static void main(String[] args) {
         main_menu main_menu = new main_menu();
         main_menu.setTitle("Main Menu");
@@ -31,7 +35,7 @@ public class main_menu extends JFrame {
         icon = new ImageIcon(newImg);
         JLabel imageLabel = new JLabel(icon);
 
-
+        
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(Color.WHITE);
         titlePanel.add(imageLabel);
@@ -43,9 +47,12 @@ public class main_menu extends JFrame {
         JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,20,0));
         mainPanel.setBackground(Color.LIGHT_GRAY); 
         mainPanel.setSize(60, 100);
+        
          
 
         
+        JLabel s = new JLabel("Please choose your identity(Admin or User)",JLabel.CENTER);
+        s.setFont(new Font("Arial", Font.BOLD, 35));
         
         JButton button1 = new JButton("Admin");
         button1.addActionListener(e -> {
@@ -67,7 +74,8 @@ public class main_menu extends JFrame {
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         
 
-   
+        mainPanel.add(Box.createVerticalStrut(100));
+        mainPanel.add(s);
         mainPanel.add(Box.createVerticalStrut(100));
         mainPanel.add(button1);
         mainPanel.add(Box.createVerticalStrut(100));

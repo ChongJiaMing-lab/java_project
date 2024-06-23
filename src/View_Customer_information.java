@@ -11,6 +11,7 @@ import java.util.Vector;
 
 public class View_Customer_information extends JFrame{
     private JTable cs_table;
+    private DefaultTableModel model;
      public static void main(String[] args) {
           SwingUtilities.invokeLater(() -> new View_Customer_information().setVisible(true));
     } 
@@ -56,7 +57,7 @@ public class View_Customer_information extends JFrame{
 }
     
     private void loadUserDataFromFile(String f) {
-        DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
         model.addColumn("Name");
         model.addColumn("Phone Number");
         model.addColumn("Email");

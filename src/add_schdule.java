@@ -15,6 +15,7 @@ public class add_schdule extends JFrame {
     private DefaultTableModel tableModel;
     private JButton addButton, editButton, deleteButton, returnButton;
     private final String FILE_NAME = "src/schdule.txt";
+    private JPanel controlPanel;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new add_schdule().setVisible(true));
@@ -43,7 +44,7 @@ public class add_schdule extends JFrame {
             dispose();
         });
         setLayout(new BorderLayout());
-        JPanel controlPanel = new JPanel(new FlowLayout());
+        controlPanel = new JPanel(new FlowLayout());
         controlPanel.add(addButton);
         controlPanel.add(editButton);
         controlPanel.add(deleteButton);
@@ -104,17 +105,45 @@ public class add_schdule extends JFrame {
             try {
                 Date date = dateFormat.parse(dateStr + " " + time);
                 double price = Double.parseDouble(priceStr);
-
-                int rows = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of seat rows:"));
-                int cols = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter number of seat columns:"));
+                
+                JRadioButton bigbutton=new JRadioButton("Big");    
+                JRadioButton smallbutton=new JRadioButton("Small");
+                ButtonGroup sg=new ButtonGroup();
+                sg.add(bigbutton);
+                sg.add(smallbutton);
+                JPanel bussize = new JPanel();
+                bussize.add(bigbutton);
+                bussize.add(smallbutton);
+                
+                JOptionPane.showConfirmDialog(this, bussize, "Choose bus size", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                
+                int rows = 0;
+                int cols = 0;
+                if(bigbutton.isSelected())
+                {
+                    rows = 10;
+                    cols = 4;
+                }
+                else if(smallbutton.isSelected())
+                {
+                    rows = 10;
+                    cols = 3;
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "Please select bus size.");
+                    return null;
+                }
+                
                 int[][] seats = new int[rows][cols];
                 for (int i = 0; i < rows; i++) {
                     for (int j = 0; j < cols; j++) {
                         seats[i][j] = 0;
                     }
                 }
-
+                JOptionPane.showMessageDialog(this, "Add Schedule Successful.");
                 return new Schedule(busPlate, date, from, to, price, seats, status);
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Invalid input format. Schedule not added.");
             }
@@ -142,6 +171,7 @@ public class add_schdule extends JFrame {
                 s.setTo(newTo);
                 s.setPrice(newPrice);
                 s.setStatus(newStatus);
+                JOptionPane.showMessageDialog(this, "Edit Successful.");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Invalid date format. Schedule not edited.");
             }
@@ -186,7 +216,7 @@ public class add_schdule extends JFrame {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(busPlateFileName))) {
             writer.write(s.toFileString());
             writer.newLine();
-            writer.newLine();
+            
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Error saving schedule to separate file: " + e.getMessage());
         }
@@ -197,6 +227,10 @@ public class add_schdule extends JFrame {
         File file = new File(busPlateFileName);
         if (file.exists() && !file.delete()) {
             JOptionPane.showMessageDialog(this, "Error deleting schedule file for " + s.getBusPlate());
+        }
+        else
+        {
+             JOptionPane.showMessageDialog(this, "Delete Schedule Successful.");
         }
     }
 }
