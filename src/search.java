@@ -11,10 +11,6 @@
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.*;
-import java.util.Scanner;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -37,11 +33,10 @@ public class search extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        String[] Fromschedule = getSchedule(1);
-        String[] Toschedule = getSchedule(2);
+        String[] location = {"JOHOR","MELAKA","NEGERI SEMBILAN","PULAU PINANG","PERAK","PERLIS","KEDAH","SELANGOR","PAHANG","TERENGGANU","KELANTAN"};
         
-        cb1 = new JComboBox(Fromschedule);
-        cb2 = new JComboBox(Toschedule);
+        cb1 = new JComboBox(location);
+        cb2 = new JComboBox(location);
         
         lbTitle = new JLabel("Bus Ticket");
         lbTitle.setFont(new Font("Serif", Font.BOLD, 20));
@@ -89,46 +84,6 @@ public class search extends JFrame implements ActionListener{
         add(p1,BorderLayout.CENTER);
         add(p2,BorderLayout.SOUTH);
         bt1.addActionListener(this);
-    }
-    
-    public String[] getSchedule(int mode)
-    {
-        int linenum =0;
-        Set<String> FromList = new HashSet<>();
-        Set<String> ToList = new HashSet<>();
-        String inputFile = "src/schdule.txt";
-        
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                
-                if(!line.equals(""))
-                {
-                    linenum++;
-                    switch (linenum) {
-                        case 3 -> FromList.add(line.trim());
-                        case 4 -> ToList.add(line.trim());
-                        case 6 -> linenum =0;
-                        default -> {
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        String[] schdule = {};
-
-        if(mode == 1)
-        {
-            schdule = FromList.toArray(new String[0]);
-        }
-        else if(mode == 2)
-        {
-            schdule = ToList.toArray(new String[0]);
-        }
-        return schdule;
     }
     
     @Override

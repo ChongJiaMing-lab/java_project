@@ -36,9 +36,9 @@ public class viewSchdule extends JFrame implements ActionListener{
     {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String inputDate = "2024-07-02";
+            String inputDate = "2024-07-01";
             Date date = dateFormat.parse(inputDate);
-            viewSchdule v = new viewSchdule("KL", "MELAKA", date);
+            viewSchdule v = new viewSchdule("KL", "JOHOR BAHRU", date);
             v.setVisible(true);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -135,8 +135,13 @@ class Schedule
             return to;
         }
         
+        public String getDateStrr() {
+        SimpleDateFormat dateFormatr = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return dateFormatr.format(date);
+    }
+        
         public String[] toTableRow() {
-        return new String[]{busPlate, getDateStr(), from, to, String.valueOf(price), status};
+        return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
     }
             
         public String getDateStr() {
