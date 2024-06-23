@@ -19,8 +19,8 @@ public class user_booking extends JFrame {
     ImageIcon seat_select, av, unav;
     private JTable j;
     private String[] info = new String[6];
-    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t, lbi1, lbi2;
-    private JLabel lb9, lb10, lb11, lb12;
+    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t, lbi1, lbi2,lbi3;
+    private JLabel lb9, lb10, lb11, lb12,lb13;
     private double price;
     private JTextField t1, t2, t3, t4;
     private double price_total;
@@ -31,14 +31,14 @@ public class user_booking extends JFrame {
     private double insurance = 0;
 
     public static void main(String[] args) {
-        user_booking f = new user_booking();
-        f.setSize(800, 700);
-        f.setTitle("User Booking");
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        SwingUtilities.invokeLater(() -> new user_booking().setVisible(true));
     }
 
     public user_booking() {
+        setSize(800, 700);
+        setTitle("User Booking");
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         DecimalFormat df = new DecimalFormat("0.00");
         seat_select = new ImageIcon("src/image/seat_select.png");
         av = new ImageIcon("src/image/seat_av.png");
@@ -55,7 +55,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-        File f = new File("src/schedule_bus/JKK 6778.txt");
+        File f = new File("src/schedule_bus/JKK 6448.txt");
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -214,6 +214,7 @@ public class user_booking extends JFrame {
         lb10 = new JLabel("Boarding Time: " + info[1]);
         lb11 = new JLabel("From: " + info[2]);
         lb12 = new JLabel("To: " + info[3]);
+        lb13 = new JLabel("Selected");
         sp222.add(lb3);
         sp222.add(lb9);
         sp222.add(lb10);
@@ -221,11 +222,13 @@ public class user_booking extends JFrame {
         sp222.add(lb12);
         lbi1 = new JLabel(av);
         lbi2 = new JLabel(unav);
+        lbi3 = new JLabel(seat_select);
         sp2.add(lb1);
         sp2.add(lbi1);
         sp2.add(lb2);
         sp2.add(lbi2);
-//        sp2.add(lb3);
+        sp2.add(lb13);
+        sp2.add(lbi3);
         Font f2 = new Font("Calibri", Font.BOLD, 20);
         Font f3 = new Font("Calibri", Font.PLAIN, 30);
         JPanel sp22 = new JPanel(new GridLayout(4, 2));
@@ -308,7 +311,7 @@ public class user_booking extends JFrame {
         }
         System.out.println(Arrays.deepToString(seat));
         try {
-            FileWriter write = new FileWriter("src/schedule_bus/JKK 6778.txt");
+            FileWriter write = new FileWriter("src/schedule_bus/JKK 6448.txt");
             BufferedWriter book = new BufferedWriter(write);
 
             for (int m = 0; m < 6; m++) {
