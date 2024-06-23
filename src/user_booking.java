@@ -66,11 +66,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-<<<<<<< HEAD
         File f = new File(get_bus);
-=======
-        File f = new File("src/schedule_bus/JKK 6778.txt");
->>>>>>> c4a439c26b441ff0972d7c1448265cfe03093c16
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -322,11 +318,7 @@ public class user_booking extends JFrame {
         }
         System.out.println(Arrays.deepToString(seat));
         try {
-<<<<<<< HEAD
             FileWriter write = new FileWriter(get_bus);
-=======
-            FileWriter write = new FileWriter("src/schedule_bus/JKK 6778.txt");
->>>>>>> c4a439c26b441ff0972d7c1448265cfe03093c16
             BufferedWriter book = new BufferedWriter(write);
             
             for (int m = 0; m < 6; m++) {

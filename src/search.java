@@ -2,8 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
-
 /**
  *
  * @author User
@@ -13,7 +11,6 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-
 public class search extends JFrame implements ActionListener{
     private JLabel lbTitle,lb1,lb2,lb3,lb4;
     private JButton bt1;
@@ -32,9 +29,9 @@ public class search extends JFrame implements ActionListener{
         setTitle("Scedule Searching");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        
+
         String[] location = {"JOHOR","MELAKA","NEGERI SEMBILAN","PENANG","PERAK","PERLIS","KEDAH","SELANGOR","PAHANG","TERENGGANU","KELANTAN"};
-        
+
         cb1 = new JComboBox(location);
         cb2 = new JComboBox(location);
         
