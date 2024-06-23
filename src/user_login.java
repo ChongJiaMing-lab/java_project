@@ -113,11 +113,7 @@ public class user_login extends JFrame implements ActionListener{
             
             for(int i =0; i <numRecords;i++)
             {
-                String name = Reader.nextLine();
-                current_name = name;
-                String PH = Reader.nextLine();
-                String email = Reader.nextLine();
-                String passwd = Reader.nextLine();
+                
                 byte[] bnameByte = new byte[name_LENGTH];
                 byte[] bPHByte = new byte[PH_LENGTH];
                 byte[] bEmailByte = new byte[EMAIL_LENGTH];
@@ -126,8 +122,8 @@ public class user_login extends JFrame implements ActionListener{
                 raf.read(bPHByte);
                 raf.read(bEmailByte);
                 raf.read(bPassByte);
-                
-                String name = new String(bnameByte).trim();
+              
+                String namee = new String(bnameByte).trim();
                 String PH = new String(bPHByte).trim();
                 String email = new String(bEmailByte).trim();
                 String password = new String(bPassByte).trim();
@@ -135,6 +131,7 @@ public class user_login extends JFrame implements ActionListener{
                 
                 if(mail.equals(email)&&password.equals(pass))
                 {
+                    current_name = namee;
                     return true;
                 }
             }
