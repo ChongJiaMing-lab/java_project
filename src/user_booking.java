@@ -133,7 +133,6 @@ public class user_booking extends JFrame {
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
                         int index = check_row.indexOf(r);
-                        if (index != -1 && check_col.get(index) == c) {
                             check_row.remove(index);
                             check_col.remove(index);
                             j1[r][c].setIcon(av);
@@ -148,7 +147,6 @@ public class user_booking extends JFrame {
                             t3.setText("RM " + String.valueOf(df.format(price_total)));
                             t4_total = price_total + insurance;
                             t4.setText("RM " + String.valueOf(df.format(t4_total)));
-                        }
                         System.out.println("Checkbox at (" + r + ", " + c + ") is un-selected");
                     }
                 });
