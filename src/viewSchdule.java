@@ -91,7 +91,6 @@ public class viewSchdule extends JFrame implements ActionListener {
         tableModel.setRowCount(0);
 
         for (Schedule s : scheduleList) {
-        System.out.println("?"+s.getStatus());
             if(s.getStatus().equals("not done"))
             {
                 tableModel.addRow(s.toTableRow());

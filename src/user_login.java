@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 public class user_login extends JFrame implements ActionListener{
@@ -20,6 +22,12 @@ public class user_login extends JFrame implements ActionListener{
     private JTextField tf1;
     private JPasswordField pf1;
     ImageIcon icon1;
+        private static final int name_LENGTH = 50;
+    private static final int PH_LENGTH = 50;
+    private static final int EMAIL_LENGTH = 50;
+    private static final int PASSWORD_LENGTH = 20;
+    private static final int RECORD_LENGTH = name_LENGTH + PH_LENGTH + EMAIL_LENGTH + PASSWORD_LENGTH;
+    
     public static void main(String[] args)
     {
         user_login u = new user_login();
@@ -94,31 +102,46 @@ public class user_login extends JFrame implements ActionListener{
         bt2.addActionListener(this);
     }
     
-    public boolean checkMail(String mail,String password)
+        public boolean checkMail(String mail,String pass)
     {
         try {
-            File read = new File("src/user.txt");
-            Scanner Reader = new Scanner(read);
-            while(Reader.hasNextLine())
+            RandomAccessFile raf = new RandomAccessFile("src/user.bin","r");
+            long fileLength = raf.length();
+            long numRecords = fileLength / RECORD_LENGTH;
+            
+            for(int i =0; i <numRecords;i++)
             {
-                String name = Reader.nextLine();
-                String PH = Reader.nextLine();
-                String email = Reader.nextLine();
-                String passwd = Reader.nextLine();
+                byte[] bnameByte = new byte[name_LENGTH];
+                byte[] bPHByte = new byte[PH_LENGTH];
+                byte[] bEmailByte = new byte[EMAIL_LENGTH];
+                byte[] bPassByte = new byte[PASSWORD_LENGTH];
+                raf.read(bnameByte);
+                raf.read(bPHByte);
+                raf.read(bEmailByte);
+                raf.read(bPassByte);
                 
-                if(mail.equals(email)&&password.equals(passwd))
+                String name = new String(bnameByte).trim();
+                String PH = new String(bPHByte).trim();
+                String email = new String(bEmailByte).trim();
+                String password = new String(bPassByte).trim();
+
+                
+                if(mail.equals(email)&&password.equals(pass))
                 {
                     return true;
                 }
-
             }
-
         } catch(FileNotFoundException e){
             System.out.println("Fail to read file");
             e.printStackTrace();
-        }
-    return false;
+        } catch (IOException e) {
+          System.out.println("An error occurred.");
+          e.printStackTrace();
     }
+        System.out.println("fail");
+        return false;
+    }
+    
     
     @Override
     public void actionPerformed(ActionEvent e)
