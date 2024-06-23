@@ -102,7 +102,7 @@ public class search extends JFrame implements ActionListener{
             String line;
             while ((line = reader.readLine()) != null) {
                 
-                if(!line.contains(" 0 ") && !line.equals(""))
+                if(!line.equals(""))
                 {
                     linenum++;
                     switch (linenum) {
@@ -134,11 +134,17 @@ public class search extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        String from = cb1.getSelectedItem().toString();
+        String to = cb2.getSelectedItem().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
         String inputDate = String.valueOf(tf1.getText());
-        Date date = dateFormat.parse(inputDate);
+    Date date = dateFormat.parse(inputDate);
         lb4.setText(" ");
+        
+            viewSchdule vs = new viewSchdule(from,to,date);
+            vs.setVisible(true);
+            dispose();
         }
         catch(Exception f)
         {

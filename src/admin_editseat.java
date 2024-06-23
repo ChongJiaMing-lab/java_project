@@ -5,9 +5,9 @@ import java.io.*;
 import java.util.*;
 
 public class admin_editseat extends JFrame {
-    private static final int ROWS = 6; // Adjusted to match the seat status data
-    private static final int COLS = 3;
-    private JButton[][] seats = new JButton[ROWS][COLS];
+    private int rows; // Adjusted dynamically based on the file content
+    private int cols; // Adjusted dynamically based on the file content
+    private JCheckBox[][] seats;
     private boolean[][] seatStatus;
     private java.util.List<CarInfo> carInfoList = new ArrayList<>();
     private JComboBox<String> carPlateComboBox;
@@ -25,36 +25,32 @@ public class admin_editseat extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Load car information from file
-        loadCarInfo();
+        // Initialize the combo box
+        carPlateComboBox = new JComboBox<>();
+        carPlateComboBox.addActionListener(e -> updateSeatStatus());
 
         // Load and scale images
         seatSelect = new ImageIcon("src/image/seat_select.png");
         av = new ImageIcon("src/image/seat_av.png");
         unav = new ImageIcon("src/image/seat_unav.png");
 
+        int iconSize = 25; // New icon size
+
         Image seat_i = seatSelect.getImage();
-        Image img1 = seat_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image img1 = seat_i.getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
         seatSelect = new ImageIcon(img1);
 
         Image av_i = av.getImage();
-        Image img2 = av_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image img2 = av_i.getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
         av = new ImageIcon(img2);
 
         Image unav_i = unav.getImage();
-        Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        Image img3 = unav_i.getScaledInstance(iconSize, iconSize, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
 
         // Create title label
         JLabel titleLabel = new JLabel("Admin - Edit Seats", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
-
-        // Create car plate combo box
-        carPlateComboBox = new JComboBox<>();
-        for (CarInfo carInfo : carInfoList) {
-            carPlateComboBox.addItem(carInfo.carPlate);
-        }
-        carPlateComboBox.addActionListener(e -> updateSeatStatus());
 
         // Create a panel for title and car plate combo box
         JPanel northPanel = new JPanel(new BorderLayout());
@@ -62,22 +58,7 @@ public class admin_editseat extends JFrame {
         northPanel.add(carPlateComboBox, BorderLayout.SOUTH);
 
         // Create seat panel
-        seatPanel = new JPanel(new GridLayout(ROWS, COLS, 10, 10)); // Add horizontal and vertical gaps
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                JButton seatButton = new JButton();
-                seatButton.setMargin(new Insets(0, 0, 0, 0)); // Remove button margin
-                seatButton.addActionListener(new SeatClickListener(i, j));
-                seats[i][j] = seatButton;
-                seatPanel.add(seatButton);
-            }
-        }
-
-        // Create a panel with GridBagLayout to center seatPanel
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20); // Add padding around the seatPanel
-        centerPanel.add(seatPanel, gbc);
+        seatPanel = new JPanel();
 
         // Create panel for control buttons
         JPanel controlPanel = new JPanel();
@@ -93,48 +74,55 @@ public class admin_editseat extends JFrame {
         controlPanel.add(unavailableButton);
         controlPanel.add(saveButton);
 
+        // Create a back button
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            admin_menu menu = new admin_menu();
+            menu.setVisible(true);
+            dispose();
+        });
+
+        // Add the back button to the control panel
+        controlPanel.add(backButton);
+
+        // Create a panel for the notice
+        JPanel noticePanel = new JPanel();
+        noticePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+        // Add labels with icons and descriptions
+        JLabel availableLabel = new JLabel("Available", av, JLabel.LEFT);
+        JLabel unavailableLabel = new JLabel("Unavailable", unav, JLabel.LEFT);
+        JLabel selectedLabel = new JLabel("Selected", seatSelect, JLabel.LEFT);
+
+        noticePanel.add(availableLabel);
+        noticePanel.add(unavailableLabel);
+        noticePanel.add(selectedLabel);
+
+        // Create a new panel to hold both controlPanel and noticePanel
+        JPanel southPanel = new JPanel(new BorderLayout());
+        southPanel.add(controlPanel, BorderLayout.NORTH);
+        southPanel.add(noticePanel, BorderLayout.SOUTH);
+
         add(northPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
-        add(controlPanel, BorderLayout.SOUTH);
+        add(new JScrollPane(seatPanel), BorderLayout.CENTER);
+        add(southPanel, BorderLayout.SOUTH); // Add the new panel to the SOUTH position
+
+        // Load car plate numbers from file after initializing the combo box
+        loadCarPlates();
 
         // Initialize the seat status display
-        if (carInfoList.size() > 0) {
+        if (carPlateComboBox.getItemCount() > 0) {
             carPlateComboBox.setSelectedIndex(0);
             updateSeatStatus();
         }
     }
 
-    private void loadCarInfo() {
-        try (Scanner s = new Scanner(new File("C:/Users/elysa/Desktop/MMU/sem 5/JAVA/project-git/java_project/build/classes/schdule.txt"))) {
+    private void loadCarPlates() {
+        try (Scanner s = new Scanner(new File("src/schedule_bus/bus_plate.txt"))) {
             while (s.hasNextLine()) {
                 String carPlate = s.nextLine().trim();
-                if (carPlate.isEmpty()) continue; // Skip blank lines
-                String date = s.nextLine().trim();
-                String from = s.nextLine().trim();
-                String to = s.nextLine().trim();
-                String price = s.nextLine().trim();
-                String status = s.nextLine().trim();
-
-                boolean[][] seatStatus = new boolean[6][3];
-                boolean validSeatData = true;
-
-                for (int i = 0; i < 6; i++) {
-                    if (!s.hasNextLine()) {
-                        validSeatData = false;
-                        break;
-                    }
-                    String[] line = s.nextLine().trim().split(" ");
-                    if (line.length != 3) {
-                        validSeatData = false;
-                        break;
-                    }
-                    for (int j = 0; j < 3; j++) {
-                        seatStatus[i][j] = line[j].equals("1");
-                    }
-                }
-
-                if (validSeatData) {
-                    carInfoList.add(new CarInfo(carPlate, date, from, to, price, status, seatStatus));
+                if (!carPlate.isEmpty()) {
+                    carPlateComboBox.addItem(carPlate);
                 }
             }
         } catch (IOException e) {
@@ -142,8 +130,74 @@ public class admin_editseat extends JFrame {
         }
     }
 
+    private void loadCarInfo(String carPlate) {
+        carInfoList.clear();
+        try (Scanner s = new Scanner(new File("src/schedule_bus/" + carPlate + ".txt"))) {
+            if (!s.hasNextLine()) return;
+            String plate = s.nextLine().trim();
+            System.out.println("Reading car plate: " + plate);
+
+            if (!s.hasNextLine()) return;
+            String date = s.nextLine().trim();
+            System.out.println("Reading date: " + date);
+
+            if (!s.hasNextLine()) return;
+            String from = s.nextLine().trim();
+            System.out.println("Reading from: " + from);
+
+            if (!s.hasNextLine()) return;
+            String to = s.nextLine().trim();
+            System.out.println("Reading to: " + to);
+
+            if (!s.hasNextLine()) return;
+            String price = s.nextLine().trim();
+            System.out.println("Reading price: " + price);
+
+            if (!s.hasNextLine()) return;
+            String status = s.nextLine().trim();
+            System.out.println("Reading status: " + status);
+
+            java.util.List<String[]> seatData = new ArrayList<>();
+            while (s.hasNextLine()) {
+                String line = s.nextLine().trim();
+                if (!line.isEmpty()) {
+                    String[] columns = line.split(" ");
+                    if (columns.length == 3 || columns.length == 4) { // Ensure each row has either 3 or 4 columns
+                        seatData.add(columns);
+                    } else {
+                        System.err.println("Error: Expected 3 or 4 columns in seat status, but got " + columns.length);
+                        return;
+                    }
+                }
+            }
+
+            if (seatData.size() != 10) { // Ensure there are exactly 10 rows
+                System.err.println("Error: Expected 10 rows of seat data, but got " + seatData.size());
+                return;
+            }
+
+            rows = seatData.size();
+            cols = seatData.get(0).length;
+            seatStatus = new boolean[rows][cols];
+
+            for (int i = 0; i < rows; i++) {
+                String[] line = seatData.get(i);
+                System.out.println("Reading seat row " + i + ": " + Arrays.toString(line));
+                for (int j = 0; j < cols; j++) {
+                    seatStatus[i][j] = line[j].equals("1");
+                }
+            }
+
+            carInfoList.add(new CarInfo(plate, date, from, to, price, status, seatStatus));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void updateSeatStatus() {
         String selectedCarPlate = (String) carPlateComboBox.getSelectedItem();
+        loadCarInfo(selectedCarPlate);
+
         for (CarInfo carInfo : carInfoList) {
             if (carInfo.carPlate.equals(selectedCarPlate)) {
                 selectedCarInfo = carInfo;
@@ -152,17 +206,29 @@ public class admin_editseat extends JFrame {
             }
         }
 
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                seats[i][j].setIcon(seatStatus[i][j] ? seatSelect : av);
+        seatPanel.removeAll();
+        seatPanel.setLayout(new GridLayout(rows, cols, 10, 10)); // Adjust layout based on rows and cols
+
+        seats = new JCheckBox[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                JCheckBox seatCheckbox = new JCheckBox();
+                seatCheckbox.setIcon(seatStatus[i][j] ? unav : av);
+                seatCheckbox.setSelected(seatStatus[i][j]);
+                seatCheckbox.addActionListener(new SeatClickListener(i, j));
+                seats[i][j] = seatCheckbox;
+                seatPanel.add(seatCheckbox);
             }
         }
+        seatPanel.revalidate();
+        seatPanel.repaint();
     }
 
     private void setSelectedSeatStatus(boolean isSelected) {
         if (selectedRow != -1 && selectedCol != -1) {
             seatStatus[selectedRow][selectedCol] = isSelected;
-            seats[selectedRow][selectedCol].setIcon(isSelected ? seatSelect : av);
+            seats[selectedRow][selectedCol].setIcon(isSelected ? unav : av);
+            seats[selectedRow][selectedCol].setSelected(isSelected);
         } else {
             JOptionPane.showMessageDialog(this, "Please select a seat first.");
         }
@@ -178,16 +244,32 @@ public class admin_editseat extends JFrame {
         }
 
         public void actionPerformed(ActionEvent e) {
+            JCheckBox source = (JCheckBox) e.getSource();
+
             // Update the selected seat coordinates
             selectedRow = row;
             selectedCol = col;
+
+            // Reset borders and icons for all seats before setting the selected one
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < cols; j++) {
+                    seats[i][j].setBorder(null);
+                    if (i != row || j != col) {
+                        seats[i][j].setIcon(seatStatus[i][j] ? unav : av);
+                    }
+                }
+            }
+
+            // Set the selected seat's border and icon
             seats[row][col].setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
+            source.setIcon(seatSelect);
         }
     }
 
     private void saveSeats() {
-        File originalFile = new File("C:/Users/elysa/Desktop/MMU/sem 5/JAVA/project-git/java_project/build/classes/schdule.txt");
-        File tempFile = new File("C:/Users/elysa/Desktop/MMU/sem 5/JAVA/project-git/java_project/build/classes/schdule_temp.txt");
+        String selectedCarPlate = (String) carPlateComboBox.getSelectedItem();
+        File originalFile = new File("src/schedule_bus/" + selectedCarPlate + ".txt");
+        File tempFile = new File("src/schedule_bus/" + selectedCarPlate + "_temp.txt");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(tempFile))) {
             for (CarInfo carInfo : carInfoList) {
@@ -204,9 +286,9 @@ public class admin_editseat extends JFrame {
                 bw.write(carInfo.status);
                 bw.newLine();
 
-                for (int i = 0; i < ROWS; i++) {
-                    for (int j = 0; j < COLS; j++) {
-                        bw.write((carInfo.seatStatus[i][j] ? "1" : "0") + (j < COLS - 1 ? " " : ""));
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        bw.write((carInfo.seatStatus[i][j] ? "1" : "0") + (j < cols - 1 ? " " : ""));
                     }
                     bw.newLine();
                 }
