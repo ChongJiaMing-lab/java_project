@@ -43,7 +43,6 @@ public class user_booking extends JFrame {
         setTitle("User Booking");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-=======
         user_booking f = new user_booking();
         f.setSize(800, 700);
         f.setTitle("User Booking");
@@ -52,7 +51,6 @@ public class user_booking extends JFrame {
     }
 
     public user_booking() {
->>>>>>> c4a439c26b441ff0972d7c1448265cfe03093c16
         DecimalFormat df = new DecimalFormat("0.00");
         seat_select = new ImageIcon("src/image/seat_select.png");
         av = new ImageIcon("src/image/seat_av.png");
