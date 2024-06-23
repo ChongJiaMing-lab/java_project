@@ -135,8 +135,13 @@ class Schedule
             return to;
         }
         
+        public String getDateStrr() {
+        SimpleDateFormat dateFormatr = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return dateFormatr.format(date);
+    }
+        
         public String[] toTableRow() {
-        return new String[]{busPlate, getDateStr(), from, to, String.valueOf(price), status};
+        return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
     }
             
         public String getDateStr() {
