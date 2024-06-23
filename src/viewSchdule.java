@@ -35,9 +35,9 @@ public class viewSchdule extends JFrame implements ActionListener {
     public static void main(String[] args) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String inputDate = "2024-07-01";
+            String inputDate = "2023-06-29";
             Date date = dateFormat.parse(inputDate);
-            viewSchdule v = new viewSchdule("KL", "JOHOR BAHRU", date);
+            viewSchdule v = new viewSchdule("KUANTAN", "PENANG", date);
             v.setVisible(true);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -89,15 +89,28 @@ public class viewSchdule extends JFrame implements ActionListener {
 
     private void updateScheduleTable() {
         tableModel.setRowCount(0);
+
         for (Schedule s : scheduleList) {
-            tableModel.addRow(s.toTableRow());
+            if(s.getStatus().equals("not done"))
+            {
+                tableModel.addRow(s.toTableRow());
+            }
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        user_booking ub= new user_booking();
-        ub.setVisible(true);
+     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addButton) {
+            int selectedRow = scheduleTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String busPlate = (String) tableModel.getValueAt(selectedRow, 0);
+
+                user_booking ub = new user_booking(busPlate);
+                ub.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select one bus。");
+            }
+        }
     }
 }
 
@@ -121,23 +134,30 @@ class Schedule {
         this.seats = seats;
         this.status = status;
     }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getDateStrr() {
+        
+        public String getFrom()
+        {
+            return from;
+        }
+        
+        public String getTo()
+        {
+            return to;
+        }
+        
+        public String getStatus()
+        {
+            return status;
+        }
+        
+        public String getDateStrr() {
         SimpleDateFormat dateFormatr = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dateFormatr.format(date);
     }
-
-    public String[] toTableRow() {
-        return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
-    }
+        
+        public String[] toTableRow() {
+            return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
+        }
 
     public String getDateStr() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -180,3 +200,5 @@ class Schedule {
         return null;
     }
 }
+
+
