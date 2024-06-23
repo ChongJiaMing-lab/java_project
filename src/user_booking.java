@@ -27,6 +27,8 @@ public class user_booking extends JFrame {
     private double t4_total;
     private ButtonGroup bg1;
     private JRadioButton r1, r2;
+    private int total_pass = 0;
+    private double insurance = 0;
 
     public static void main(String[] args) {
         user_booking f = new user_booking();
@@ -101,28 +103,32 @@ public class user_booking extends JFrame {
                 int r = j;
                 int c = k;
                 j1[j][k] = new JCheckBox();
+                j1[j][k].setOpaque(false);
                 if (seat[j][k] == 1) {
                     j1[j][k].setIcon(unav);
                     j1[j][k].setEnabled(false);
                 } else {
                     j1[j][k].setIcon(av);
                 }
+                
                 price_total = 0.0;
-
+                total_pass = 0;
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
                     if (source.isSelected()) {
                         check_row.add(r);
                         check_col.add(c);
                         j1[r][c].setIcon(seat_select);
-                        price_total += price;
-                        if(r1.isSelected())
-                        {
-                            t4_total = price_total +2;
+                        total_pass += 1;
+                        price_total = total_pass * price;
+                        if (r1.isSelected()) {
+                            insurance = 2;
+                        } else {
+                            insurance = 0;
                         }
-                        else
-                            t4_total = price_total;
+                        t2.setText("" + total_pass);
                         t3.setText("RM " + String.valueOf(df.format(price_total)));
+                        t4_total = price_total + insurance;
                         t4.setText("RM " + String.valueOf(df.format(t4_total)));
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
@@ -131,10 +137,17 @@ public class user_booking extends JFrame {
                             check_row.remove(index);
                             check_col.remove(index);
                             j1[r][c].setIcon(av);
+                            total_pass -= 1;
                             price_total -= price;
-//                            t3.setText(String.format("%.2f", price_total));
+                            if (r1.isSelected()) {
+                                insurance = 2;
+                            } else {
+                                insurance = 0;
+                            }
+                            t2.setText("" + total_pass);
                             t3.setText("RM " + String.valueOf(df.format(price_total)));
-                            t4.setText("RM " + String.valueOf(df.format(price_total)));
+                            t4_total = price_total + insurance;
+                            t4.setText("RM " + String.valueOf(df.format(t4_total)));
                         }
                         System.out.println("Checkbox at (" + r + ", " + c + ") is un-selected");
                     }
@@ -232,6 +245,7 @@ public class user_booking extends JFrame {
         t1 = new JTextField(10);
         lb5 = new JLabel("Total Passenger:");
         t2 = new JTextField(10);
+        t2.setText("0");
         lb6 = new JLabel("SubTotal:");
         t3 = new JTextField(10);
         t3.setText("RM 0.00");
@@ -268,11 +282,22 @@ public class user_booking extends JFrame {
 //        p2.setFont(f2);
         add(lp, BorderLayout.WEST);
         add(title, BorderLayout.NORTH);
-        add(p2, BorderLayout.CENTER);
+        add(p2, BorderLayout.EAST);
 
         submit.addActionListener((e) -> {
             confirm_selection();
         });
+//        
+//         r1.addActionListener((e) -> {
+//            if(r1.isSelected())
+//            {
+//                insurance =2;
+//            }
+//            else
+//            {
+//                insurance = 0;
+//            }
+//        });
 
     }
 
