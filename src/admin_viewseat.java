@@ -4,19 +4,27 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.*;
 
-public class admin_viewseat extends JFrame 
-{
+public class admin_viewseat extends JFrame {
+    private java.util.List<String> carPlateList = new ArrayList<>();
     private java.util.List<CarInfo> carInfoList = new ArrayList<>();
     private JPanel carPanel;
+    private JPanel infoPanel;
+    private JPanel seatPanel;
 
-    public admin_viewseat() 
-    {
+    private ImageIcon availableIcon;
+    private ImageIcon unavailableIcon;
+
+    public admin_viewseat() {
         setTitle("Admin - View Seats");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Load car information from file
-        loadCarInfo();
+        // Load car plate numbers from file
+        loadCarPlates();
+
+        // Load and resize icons
+        availableIcon = resizeIcon(new ImageIcon("src/image/seat_av.png"), 20, 20);
+        unavailableIcon = resizeIcon(new ImageIcon("src/image/seat_unav.png"), 20, 20);
 
         // Create title and instruction labels
         JLabel titleLabel = new JLabel("Admin - View Seats", SwingConstants.CENTER);
@@ -31,134 +39,182 @@ public class admin_viewseat extends JFrame
 
         // Create car buttons
         carPanel = new JPanel(new GridLayout(0, 1, 10, 10)); // Dynamic rows, 1 column
-        for (CarInfo carInfo : carInfoList) 
-        {
-            JButton carButton = new JButton(carInfo.carPlate);
-            carButton.addActionListener(new CarButtonClickListener(carInfo));
+        for (String carPlate : carPlateList) {
+            JButton carButton = new JButton(carPlate);
+            carButton.addActionListener(new CarButtonClickListener(carPlate));
             carPanel.add(carButton);
         }
 
-        // Center panel
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(20, 20, 20, 20);
-        centerPanel.add(carPanel, gbc);
+        // Create info and seat panels
+        infoPanel = new JPanel(new BorderLayout());
+        seatPanel = new JPanel(); // Grid layout will be set dynamically
+
+        // Create a split pane to hold carPanel and infoPanel
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(carPanel), createRightPanel());
+        splitPane.setDividerLocation(200);
+
+        // Create a back button
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(e -> {
+            admin_menu menu = new admin_menu();
+            menu.setVisible(true);
+            dispose();
+        });
+
+        // Create a panel for the back button and add it to the bottom
+        JPanel southPanel = new JPanel();
+        southPanel.add(backButton);
 
         // Add panels to the frame
         add(northPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
+        add(splitPane, BorderLayout.CENTER);
+        add(southPanel, BorderLayout.SOUTH);
     }
 
-    private void loadCarInfo() 
-    {
-        try (Scanner s = new Scanner(new File("C:/Users/elysa/Desktop/MMU/sem 5/JAVA/project-git/java_project/build/classes/schdule.txt"))) {
-            while (s.hasNextLine()) 
-            {
+    private JPanel createRightPanel() {
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(infoPanel, BorderLayout.NORTH);
+        rightPanel.add(new JScrollPane(seatPanel), BorderLayout.CENTER);
+        return rightPanel;
+    }
+
+    private void loadCarPlates() {
+        try (Scanner s = new Scanner(new File("src/schedule_bus/bus_plate.txt"))) {
+            while (s.hasNextLine()) {
                 String carPlate = s.nextLine().trim();
-                if (carPlate.isEmpty()) continue; // Skip blank lines
-                System.out.println("Reading car plate: " + carPlate);
-
-                if (!s.hasNextLine()) break;
-                String date = s.nextLine().trim();
-                System.out.println("Reading date: " + date);
-
-                if (!s.hasNextLine()) break;
-                String from = s.nextLine().trim();
-                System.out.println("Reading from: " + from);
-
-                if (!s.hasNextLine()) break;
-                String to = s.nextLine().trim();
-                System.out.println("Reading to: " + to);
-
-                if (!s.hasNextLine()) break;
-                String price = s.nextLine().trim();
-                System.out.println("Reading price: " + price);
-
-                if (!s.hasNextLine()) break;
-                String status = s.nextLine().trim();
-                System.out.println("Reading status: " + status);
-
-                boolean[][] seatStatus = new boolean[6][3];
-                boolean validSeatData = true;
-
-                for (int i = 0; i < 6; i++) 
-                {
-                    if (!s.hasNextLine()) 
-                    {
-                        validSeatData = false;
-                        break;
-                    }
-                    String[] line = s.nextLine().trim().split(" ");
-                    System.out.println("Reading seat status line " + (i + 1) + ": " + Arrays.toString(line));
-                    if (line.length != 3) 
-                    {
-                        System.err.println("Error: Expected 3 columns in seat status, but got " + line.length + " in line " + (i + 1));
-                        validSeatData = false;
-                        break;
-                    }
-                    for (int j = 0; j < 3; j++) 
-                    {
-                        seatStatus[i][j] = line[j].equals("1");
-                    }
-                }
-
-                if (validSeatData) 
-                {
-                    carInfoList.add(new CarInfo(carPlate, date, from, to, price, status, seatStatus));
-                } 
-                else 
-                {
-                    System.err.println("Error: Invalid seat data for car plate " + carPlate);
+                if (!carPlate.isEmpty()) {
+                    carPlateList.add(carPlate);
                 }
             }
-        } 
-        catch (IOException e) 
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private class CarButtonClickListener implements ActionListener 
-    {
-        private CarInfo carInfo;
+    private void loadCarInfo(String carPlate) {
+        carInfoList.clear();
+        try (Scanner s = new Scanner(new File("src/schedule_bus/" + carPlate + ".txt"))) {
+            if (!s.hasNextLine()) return;
+            String plate = s.nextLine().trim();
+            System.out.println("Reading car plate: " + plate);
 
-        public CarButtonClickListener(CarInfo carInfo) 
-        {
-            this.carInfo = carInfo;
-        }
+            if (!s.hasNextLine()) return;
+            String date = s.nextLine().trim();
+            System.out.println("Reading date: " + date);
 
-        public void actionPerformed(ActionEvent e) 
-        {
-            // Display seat status for the selected car along with date and time
-            StringBuilder seatStatusString = new StringBuilder();
-            for (int i = 0; i < carInfo.seatStatus.length; i++) 
-            {
-                for (int j = 0; j < carInfo.seatStatus[i].length; j++) 
-                {
-                    seatStatusString.append(carInfo.seatStatus[i][j] ? "1 " : "0 ");
+            if (!s.hasNextLine()) return;
+            String from = s.nextLine().trim();
+            System.out.println("Reading from: " + from);
+
+            if (!s.hasNextLine()) return;
+            String to = s.nextLine().trim();
+            System.out.println("Reading to: " + to);
+
+            if (!s.hasNextLine()) return;
+            String price = s.nextLine().trim();
+            System.out.println("Reading price: " + price);
+
+            if (!s.hasNextLine()) return;
+            String status = s.nextLine().trim();
+            System.out.println("Reading status: " + status);
+
+            java.util.List<boolean[]> seatStatusList = new ArrayList<>();
+            boolean validSeatData = true;
+            int maxColumns = 0;
+
+            while (s.hasNextLine()) {
+                String line = s.nextLine().trim();
+                if (line.isEmpty()) continue; // Skip empty lines
+
+                String[] columns = line.split(" ");
+                System.out.println("Reading seat status line: " + Arrays.toString(columns));
+                if (columns.length < 3 || columns.length > 4) {
+                    System.err.println("Error: Expected 3 or 4 columns in seat status, but got " + columns.length);
+                    validSeatData = false;
+                    break;
                 }
-                seatStatusString.append("\n");
+                maxColumns = Math.max(maxColumns, columns.length);
+                boolean[] seatRow = new boolean[columns.length];
+                for (int j = 0; j < columns.length; j++) {
+                    seatRow[j] = columns[j].equals("1");
+                }
+                seatStatusList.add(seatRow);
             }
 
-            // Create a JTextArea to hold the message content
-            JTextArea textArea = new JTextArea("Car Plate: " + carInfo.carPlate + 
-                                               "\nDate and Time: " + carInfo.date + 
-                                               "\nSeats Status:\n" + seatStatusString.toString());
-            textArea.setEditable(false);
-            textArea.setLineWrap(true);
-            textArea.setWrapStyleWord(true);
-
-            // Wrap the JTextArea in a JScrollPane
-            JScrollPane scrollPane = new JScrollPane(textArea);
-            scrollPane.setPreferredSize(new Dimension(400, 300)); // Set the preferred size of the scroll pane
-
-            // Display the message in a JOptionPane
-            JOptionPane.showMessageDialog(null, scrollPane, "Car Seat Status", JOptionPane.INFORMATION_MESSAGE);
+            if (validSeatData) {
+                boolean[][] seatStatus = seatStatusList.toArray(new boolean[0][]);
+                carInfoList.add(new CarInfo(plate, date, from, to, price, status, seatStatus, maxColumns));
+            } else {
+                System.err.println("Error: Invalid seat data for car plate " + carPlate);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private class CarInfo 
-    {
+    private class CarButtonClickListener implements ActionListener {
+        private String carPlate;
+
+        public CarButtonClickListener(String carPlate) {
+            this.carPlate = carPlate;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            // Load car information for the selected car plate
+            loadCarInfo(carPlate);
+
+            // Display car info and seat status for the selected car
+            infoPanel.removeAll();
+            seatPanel.removeAll();
+
+            for (CarInfo carInfo : carInfoList) {
+                // Display car info
+                JTextArea infoArea = new JTextArea();
+                infoArea.setEditable(false);
+                infoArea.setText("Car Plate: " + carInfo.carPlate + "\n" +
+                                 "Date: " + carInfo.date + "\n" +
+                                 "From: " + carInfo.from + "\n" +
+                                 "To: " + carInfo.to + "\n" +
+                                 "Price: " + carInfo.price + "\n" +
+                                 "Status: " + carInfo.status);
+                infoPanel.add(infoArea, BorderLayout.CENTER);
+
+                // Set the seat panel layout based on the maximum number of columns
+                seatPanel.setLayout(new GridLayout(0, carInfo.maxColumns, 5, 5));
+
+                // Display seat status
+                for (int i = 0; i < carInfo.seatStatus.length; i++) {
+                    for (int j = 0; j < carInfo.seatStatus[i].length; j++) {
+                        JLabel seatLabel = new JLabel(carInfo.seatStatus[i][j] ? unavailableIcon : availableIcon);
+                        seatPanel.add(seatLabel);
+                    }
+                }
+            }
+
+            // Create a panel for the legend
+            JPanel legendPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            JLabel availableLabel = new JLabel("Available ", availableIcon, JLabel.CENTER);
+            JLabel unavailableLabel = new JLabel("Unavailable ", unavailableIcon, JLabel.CENTER);
+            legendPanel.add(availableLabel);
+            legendPanel.add(unavailableLabel);
+
+            // Add the legend panel to the infoPanel
+            infoPanel.add(legendPanel, BorderLayout.SOUTH);
+
+            infoPanel.revalidate();
+            infoPanel.repaint();
+            seatPanel.revalidate();
+            seatPanel.repaint();
+        }
+    }
+
+    private ImageIcon resizeIcon(ImageIcon icon, int width, int height) {
+        Image img = icon.getImage();
+        Image resizedImg = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(resizedImg);
+    }
+
+    private class CarInfo {
         String carPlate;
         String date;
         String from;
@@ -166,8 +222,9 @@ public class admin_viewseat extends JFrame
         String price;
         String status;
         boolean[][] seatStatus;
+        int maxColumns;
 
-        public CarInfo(String carPlate, String date, String from, String to, String price, String status, boolean[][] seatStatus) {
+        public CarInfo(String carPlate, String date, String from, String to, String price, String status, boolean[][] seatStatus, int maxColumns) {
             this.carPlate = carPlate;
             this.date = date;
             this.from = from;
@@ -175,13 +232,12 @@ public class admin_viewseat extends JFrame
             this.price = price;
             this.status = status;
             this.seatStatus = seatStatus;
+            this.maxColumns = maxColumns;
         }
     }
 
-    public static void main(String[] args) 
-    {
-        SwingUtilities.invokeLater(() -> 
-        {
+       public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
             admin_viewseat frame = new admin_viewseat();
             frame.setVisible(true);
         });
