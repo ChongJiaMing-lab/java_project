@@ -1,16 +1,7 @@
 
 import javax.swing.*;
 import java.awt.*;
-import static java.awt.image.ImageObserver.ABORT;
-import static java.awt.image.ImageObserver.HEIGHT;
-import static java.awt.image.ImageObserver.WIDTH;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -27,14 +18,14 @@ public class user_booking extends JFrame {
     ImageIcon seat_select, av, unav;
     private JTable j;
     private String[] info = new String[6];
-    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t;
+    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t, lbi1, lbi2;
     private double price;
     private JTextField t1, t2, t3, t4;
+    private double price_total;
 
     public static void main(String[] args) {
         user_booking f = new user_booking();
         f.setSize(800, 700);
-        //f.pack();
         f.setTitle("User Booking");
         f.setVisible(true);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +47,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-        File f = new File("src/schedule_bus/a1.txt");
+        File f = new File("src/schedule_bus/JKK 6778.txt");
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -110,12 +101,16 @@ public class user_booking extends JFrame {
                 } else {
                     j1[j][k].setIcon(av);
                 }
+                price_total = 0.0;
                 j1[j][k].addActionListener((e) -> {
                     JCheckBox source = (JCheckBox) e.getSource();
                     if (source.isSelected()) {
                         check_row.add(r);
                         check_col.add(c);
                         j1[r][c].setIcon(seat_select);
+                        price_total += price;
+                        t3.setText(String.format("%.2f", price_total));
+                        t3.setText("RM " + price_total);
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
                         int index = check_row.indexOf(r);
@@ -123,34 +118,29 @@ public class user_booking extends JFrame {
                             check_row.remove(index);
                             check_col.remove(index);
                             j1[r][c].setIcon(av);
+                            price_total -= price;
+                            t3.setText(String.format("%.2f", price_total));
+                            t3.setText("RM " + price_total);
                         }
                         System.out.println("Checkbox at (" + r + ", " + c + ") is un-selected");
                     }
                 });
             }
         }
-        String[][] data = {
-            {"Kundan Kumar Jha", "4031", "CSE"},
-            {"Anand Jha", "6014", "IT"}
-        };
-
-        // Column Names
-        String[] columnNames = {"Name", "Roll Number", "Department"};
-
-        // Initializing the JTable
-        j = new JTable(data, columnNames);
-        JPanel p3 = new JPanel();
-        // adding it to JScrollPane
-        JScrollPane sp = new JScrollPane(j);
-//        p3.add(sp);
         JPanel p1 = new JPanel(new GridLayout(row, col));
         for (JCheckBox[] r : j1) {
             for (JCheckBox checkBox : r) {
                 p1.add(checkBox);
             }
         }
+        int dimension = 300;
+        int bo = 275;
+        if (col > 3) {
+            dimension = 315;
+            bo = 300;
+        }
         JLayeredPane lp = new JLayeredPane();
-        lp.setPreferredSize(new Dimension(500, 500));
+        lp.setPreferredSize(new Dimension(dimension, 300));//big = 400, small = 300
         p1.setBounds(30, 42, 300, 480);
         lp.add(p1, JLayeredPane.DEFAULT_LAYER);
 
@@ -178,7 +168,7 @@ public class user_booking extends JFrame {
             }
         };
 
-        op.setBounds(20, 0, 275, 600);
+        op.setBounds(20, 0, bo, 600);//third, big = 375, small = 275
         op.setOpaque(false);
         lp.add(op, JLayeredPane.PALETTE_LAYER);
 
@@ -189,72 +179,57 @@ public class user_booking extends JFrame {
         JPanel title = new JPanel();
         title.add(t);
 
-        JPanel p2 = new JPanel(new GridLayout(2, 1));
+        JPanel p2 = new JPanel(new GridLayout(3, 1));
         JPanel sp2 = new JPanel();
         lb1 = new JLabel("Available");
         lb2 = new JLabel("Unavailable");
         lb3 = new JLabel("Ticket Price : RM" + price);
+        lbi1 = new JLabel(av);
+        lbi2 = new JLabel(unav);
         sp2.add(lb1);
+        sp2.add(lbi1);
         sp2.add(lb2);
+        sp2.add(lbi2);
         sp2.add(lb3);
-        p3.add(lb1);
+        Font f2 = new Font("Calibri", Font.BOLD, 20);
         JPanel sp22 = new JPanel(new GridLayout(4, 2));
         submit = new JButton("Confirm");
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // 设置组件之间的间距
+        JPanel p_b = new JPanel();
+        p_b.add(submit);
 
-        // 添加标签和文本框
-        JLabel lb1 = new JLabel("Travel Insurance?(RM2):");
-        JTextField t1 = new JTextField(10);
-        JLabel lb2 = new JLabel("Total Passenger:");
-        JTextField t2 = new JTextField(10);
-        JLabel lb3 = new JLabel("SubTotal:");
-        JTextField t3 = new JTextField(10);
-        JLabel lb4 = new JLabel("Total:");
-        JTextField t4 = new JTextField(10);
+        lb4 = new JLabel("Travel Insurance?(RM2):");
+        t1 = new JTextField(10);
+        lb5 = new JLabel("Total Passenger:");
+        t2 = new JTextField(10);
+        lb6 = new JLabel("SubTotal:");
+        t3 = new JTextField(10);
+        lb7 = new JLabel("Total:");
+        t4 = new JTextField(10);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        sp22.add(lb1, gbc);
-
-        gbc.gridx = 1;
-        sp22.add(t1, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        sp22.add(lb2, gbc);
-
-        gbc.gridx = 1;
-        sp22.add(t2, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        sp22.add(lb3, gbc);
-
-        gbc.gridx = 1;
-        sp22.add(t3, gbc);
-
-        gbc.gridx = 100;
-        gbc.gridy = 3;
-        sp22.add(lb4, gbc);
-
-        gbc.gridx = 1;
-        sp22.add(t4, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2; // 指定按钮跨两列
-        gbc.fill = GridBagConstraints.HORIZONTAL; // 填充水平空间
-        gbc.anchor = GridBagConstraints.CENTER; // 居中对齐
+        sp22.add(lb4);
+        sp22.add(t1);
+        sp22.add(lb5);
+        sp22.add(t2);
+        sp22.add(lb6);
+        sp22.add(t3);
+        sp22.add(lb7);
+        sp22.add(t4);
+        lb4.setFont(f2);
+        lb5.setFont(f2);
+        lb6.setFont(f2);
+        lb7.setFont(f2);
+        t1.setFont(f2);
+        t2.setFont(f2);
+        t3.setFont(f2);
+        t4.setFont(f2);
         p2.add(sp2);
         p2.add(sp22);
-        JPanel pp = new JPanel();
-        pp.add(submit);
+        p2.add(p_b);
+        p2.setFont(f2);
         add(lp, BorderLayout.WEST);
         add(title, BorderLayout.NORTH);
         add(p2, BorderLayout.CENTER);
-        add(pp, BorderLayout.EAST);
-        add(p3, BorderLayout.SOUTH);
+
         submit.addActionListener((e) -> {
             confirm_selection();
         });
@@ -268,9 +243,9 @@ public class user_booking extends JFrame {
         }
         System.out.println(Arrays.deepToString(seat));
         try {
-            FileWriter write = new FileWriter("src/schedule_bus/a1.txt");
+            FileWriter write = new FileWriter("src/schedule_bus/JKK 678.txt");
             BufferedWriter book = new BufferedWriter(write);
- 
+
             for (int m = 0; m < 6; m++) {
                 book.write(info[m]);
                 book.newLine();
@@ -290,15 +265,5 @@ public class user_booking extends JFrame {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-
-    }
-}
-
-class DrawPanel extends JPanel {
-
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        g.drawRect(1, 1, 100, 100);
     }
 }
