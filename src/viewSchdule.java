@@ -89,8 +89,12 @@ public class viewSchdule extends JFrame implements ActionListener {
 
     private void updateScheduleTable() {
         tableModel.setRowCount(0);
+
         for (Schedule s : scheduleList) {
-            tableModel.addRow(s.toTableRow());
+            if(s.getStatus().equals("not done"))
+            {
+                tableModel.addRow(s.toTableRow());
+            }
         }
     }
 
@@ -130,23 +134,30 @@ class Schedule {
         this.seats = seats;
         this.status = status;
     }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public String getDateStrr() {
+        
+        public String getFrom()
+        {
+            return from;
+        }
+        
+        public String getTo()
+        {
+            return to;
+        }
+        
+        public String getStatus()
+        {
+            return status;
+        }
+        
+        public String getDateStrr() {
         SimpleDateFormat dateFormatr = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dateFormatr.format(date);
     }
-
-    public String[] toTableRow() {
-        return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
-    }
+        
+        public String[] toTableRow() {
+            return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
+        }
 
     public String getDateStr() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -189,3 +200,5 @@ class Schedule {
         return null;
     }
 }
+
+
