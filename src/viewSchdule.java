@@ -19,21 +19,20 @@ import javax.swing.table.DefaultTableModel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 /**
  *
  * @author User
  */
-public class viewSchdule extends JFrame implements ActionListener{
-     private java.util.List<Schedule> scheduleList = new ArrayList<>();
+public class viewSchdule extends JFrame implements ActionListener {
+
+    private java.util.List<Schedule> scheduleList = new ArrayList<>();
     private JTable scheduleTable;
     private DefaultTableModel tableModel;
     private JButton addButton;
     private final String FILE_NAME = "src/schdule.txt";
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    
-    public static void main(String[] args)
-    {
+
+    public static void main(String[] args) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String inputDate = "2024-07-01";
@@ -44,42 +43,39 @@ public class viewSchdule extends JFrame implements ActionListener{
             e.printStackTrace();
         }
     }
-    
-    
-    public viewSchdule(String from,String to,Date date)
-    {
+
+    public viewSchdule(String from, String to, Date date) {
         setTitle("View and Add Bus Schedule");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
         setLocationRelativeTo(null);
-        
+
         String[] columnNames = {"Bus Plate", "Date", "From", "To", "Price", "Status"};
         tableModel = new DefaultTableModel(columnNames, 0);
         scheduleTable = new JTable(tableModel);
         addButton = new JButton("Book ticket");
-        
-        loadScheduleFromFile(from,to,date);
-        
+
+        loadScheduleFromFile(from, to, date);
+
         setLayout(new BorderLayout());
         JPanel controlPanel = new JPanel(new FlowLayout());
         controlPanel.add(addButton);
-                
+
         add(new JScrollPane(scheduleTable), BorderLayout.CENTER);
         add(controlPanel, BorderLayout.SOUTH);
-        
+
         addButton.addActionListener(this);
-        
+
     }
-    
-        private void loadScheduleFromFile(String from,String to,Date date) {
-             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                dateFormat.format(date);
+
+    private void loadScheduleFromFile(String from, String to, Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.format(date);
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             Schedule s;
-            System.out.println(from+" " + to);
+            System.out.println(from + " " + to);
             while ((s = Schedule.fromFileString(reader)) != null) {
-                if(from.equals(s.getFrom())&&to.equals(s.getTo())&& dateFormat.format(date).equals(s.getDateStr()))
-                {
+                if (from.equals(s.getFrom()) && to.equals(s.getTo()) && dateFormat.format(date).equals(s.getDateStr())) {
                     scheduleList.add(s);
                 }
             }
@@ -90,26 +86,28 @@ public class viewSchdule extends JFrame implements ActionListener{
             JOptionPane.showMessageDialog(this, "Error loading schedule from file: " + e.getMessage());
         }
     }
-        
-        private void updateScheduleTable() {
+
+    private void updateScheduleTable() {
         tableModel.setRowCount(0);
+
         for (Schedule s : scheduleList) {
+        System.out.println("?"+s.getStatus());
             if(s.getStatus().equals("not done"))
             {
                 tableModel.addRow(s.toTableRow());
             }
         }
     }
-    
+
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        
+    public void actionPerformed(ActionEvent e) {
+        user_booking ub= new user_booking();
+        ub.setVisible(true);
     }
 }
 
-class Schedule
-{
+class Schedule {
+
     private String busPlate;
     private Date date;
     private String from;
@@ -118,7 +116,8 @@ class Schedule
     private int[][] seats;
     private String status;
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        public Schedule(String busPlate, Date date, String from, String to, double price, int[][] seats, String status) {
+
+    public Schedule(String busPlate, Date date, String from, String to, double price, int[][] seats, String status) {
         this.busPlate = busPlate;
         this.date = date;
         this.from = from;
@@ -150,14 +149,14 @@ class Schedule
         
         public String[] toTableRow() {
             return new String[]{busPlate, getDateStrr(), from, to, String.valueOf(price), status};
-    }
-            
-        public String getDateStr() {
+        }
+
+    public String getDateStr() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(date);
     }
-        
-            public static Schedule fromFileString(BufferedReader reader) {
+
+    public static Schedule fromFileString(BufferedReader reader) {
         try {
             String busPlate = reader.readLine();
             if (busPlate == null || busPlate.trim().isEmpty()) {
