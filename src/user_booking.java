@@ -9,7 +9,8 @@ import java.util.Scanner;
 
 public class user_booking extends JFrame {
 
-    static int choice = 1;
+    static String get_bus = "";
+    private String current_id = "";
     private JCheckBox[][] j1;
     private static int row = 0;
     private static int col = 0;
@@ -29,12 +30,14 @@ public class user_booking extends JFrame {
     private JRadioButton r1, r2;
     private int total_pass = 0;
     private double insurance = 0;
-
+    
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new user_booking().setVisible(true));
     }
 
-    public user_booking() {
+    public user_booking(String plate) {
+        current_id = user_login.current_id;
+        System.out.println(current_id);
+        get_bus = "src/schedule_bus/"+plate+".txt";
         setSize(800, 700);
         setTitle("User Booking");
         setLocationRelativeTo(null);
@@ -55,7 +58,7 @@ public class user_booking extends JFrame {
         Image unav_i = unav.getImage();
         Image img3 = unav_i.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         unav = new ImageIcon(img3);
-        File f = new File("src/schedule_bus/JKK 6448.txt");
+        File f = new File(get_bus);
         try {
             Scanner s = new Scanner(f);
             info[0] = s.nextLine();
@@ -303,7 +306,6 @@ public class user_booking extends JFrame {
     }
 
     public void confirm_selection() {
-
         System.out.println("The position you have selected is :");
         System.out.println("(" + check_row + ", " + check_col + ")");
         for (int i = 0; i < check_row.size(); i++) {
@@ -311,9 +313,9 @@ public class user_booking extends JFrame {
         }
         System.out.println(Arrays.deepToString(seat));
         try {
-            FileWriter write = new FileWriter("src/schedule_bus/JKK 6448.txt");
+            FileWriter write = new FileWriter(get_bus);
             BufferedWriter book = new BufferedWriter(write);
-
+            
             for (int m = 0; m < 6; m++) {
                 book.write(info[m]);
                 book.newLine();
@@ -326,6 +328,13 @@ public class user_booking extends JFrame {
                     book.write(String.valueOf(seat[i][j]));
                 }
                 book.newLine();
+            }
+            FileWriter write2 = new FileWriter("src/user_booking.txt");
+            BufferedWriter cancel = new BufferedWriter(write2);
+            cancel.write(current_id);
+            cancel.write(get_bus);
+            for (int i = 0; i < check_row.size(); i++) {
+                cancel.write(check_row.get(i)+" "+check_col.get(i));
             }
             book.close();
             System.out.println("Success to book the seat.");

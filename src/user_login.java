@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class user_login extends JFrame implements ActionListener{
+    public static String current_id = "";
+    public static String current_name = "";
     private JLabel lb1,lb2,lbIcon,lbTitle,lb3,lb4;
     private JButton bt1,bt2;
     private JTextField tf1;
@@ -102,6 +104,7 @@ public class user_login extends JFrame implements ActionListener{
             while(Reader.hasNextLine())
             {
                 String name = Reader.nextLine();
+                current_name = name;
                 String PH = Reader.nextLine();
                 String email = Reader.nextLine();
                 String passwd = Reader.nextLine();
@@ -138,8 +141,9 @@ public class user_login extends JFrame implements ActionListener{
         }
         else if(checkMail(email,password))
         {
+            current_id = email;
             lb3.setText(" ");
-            search u2 = new search();
+            user_menu u2 = new user_menu();
             u2.setVisible(true);
             dispose();
         }

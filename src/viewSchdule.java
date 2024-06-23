@@ -35,9 +35,9 @@ public class viewSchdule extends JFrame implements ActionListener {
     public static void main(String[] args) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String inputDate = "2024-07-01";
+            String inputDate = "2023-06-29";
             Date date = dateFormat.parse(inputDate);
-            viewSchdule v = new viewSchdule("KL", "JOHOR BAHRU", date);
+            viewSchdule v = new viewSchdule("KUANTAN", "PENANG", date);
             v.setVisible(true);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -95,9 +95,18 @@ public class viewSchdule extends JFrame implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        user_booking ub= new user_booking();
-        ub.setVisible(true);
+     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addButton) {
+            int selectedRow = scheduleTable.getSelectedRow();
+            if (selectedRow != -1) {
+                String busPlate = (String) tableModel.getValueAt(selectedRow, 0);
+
+                user_booking ub = new user_booking(busPlate);
+                ub.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Please select one bus。");
+            }
+        }
     }
 }
 

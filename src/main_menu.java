@@ -5,11 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class main_menu extends JFrame {
-    
-    // 在其他类中使用静态变量或方法
-CurrentUser.setUserId(userId);
-String userId = CurrentUser.getUserId();
-
     public static void main(String[] args) {
         main_menu main_menu = new main_menu();
         main_menu.setTitle("Main Menu");
