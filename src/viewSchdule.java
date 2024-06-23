@@ -35,9 +35,9 @@ public class viewSchdule extends JFrame implements ActionListener {
     public static void main(String[] args) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String inputDate = "2024-07-02";
+            String inputDate = "2024-07-01";
             Date date = dateFormat.parse(inputDate);
-            viewSchdule v = new viewSchdule("KL", "MELAKA", date);
+            viewSchdule v = new viewSchdule("KL", "JOHOR BAHRU", date);
             v.setVisible(true);
         } catch (ParseException e) {
             e.printStackTrace();
