@@ -60,7 +60,9 @@ public class user_menu extends JFrame implements ActionListener {
     }
 
     private void view_schedule() {
-        
+        search s = new search();
+        s.setVisible(true);
+        dispose();
     }
 
     private void view_booking() {

@@ -32,7 +32,6 @@ public class user_booking extends JFrame {
     private double insurance = 0;
     
     public static void main(String[] args) {
-<<<<<<< HEAD
     }
 
     public user_booking(String plate) {

@@ -33,7 +33,7 @@ public class search extends JFrame implements ActionListener{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-        String[] location = {"JOHOR","MELAKA","NEGERI SEMBILAN","PENANG","PERAK","PERLIS","KEDAH","SELANGOR","PAHANG","TERENGGANU","KELANTAN","KUANTAN"};
+        String[] location = {"JOHOR","MELAKA","NEGERI SEMBILAN","PENANG","PERAK","PERLIS","KEDAH","SELANGOR","PAHANG","TERENGGANU","KELANTAN"};
         
         cb1 = new JComboBox(location);
         cb2 = new JComboBox(location);
