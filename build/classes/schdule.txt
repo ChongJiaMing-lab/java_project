@@ -33,6 +33,28 @@ KUANTAN
 25.0
 done
 
+<<<<<<< HEAD
+JKK123
+2024-12-12 12:12
+WQE
+QWE
+120.0
+not done
+
+JKK 1234
+2024-07-23 23:55
+KL
+JB
+20.0
+not done
+
+JKK4563
+2024-12-23 00:00
+KL
+KUANTAN
+28.0
+not done
+=======
 AAA 123
 1234-12-12 12:12
 12:12
@@ -46,4 +68,5 @@ kl
 johor
 12.0
 done
+>>>>>>> 19c55fe4665bfe41e5102c78a721a4c2a5a675bf
 
