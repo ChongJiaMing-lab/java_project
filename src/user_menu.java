@@ -66,7 +66,9 @@ public class user_menu extends JFrame implements ActionListener {
     }
 
     private void view_booking() {
-        
+        user_view_booking v = new user_view_booking();
+        v.setVisible(true);
+        dispose();
     }
 
     private void user_logout() {

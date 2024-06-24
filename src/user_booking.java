@@ -99,7 +99,7 @@ public class user_booking extends JFrame {
                         seat[i][j] = Integer.parseInt(n[j]);
                     }
                 }
-                System.out.println("texsting: "+Arrays.deepToString(seat));
+                System.out.println("texsting: " + Arrays.deepToString(seat));
             }
             j1 = new JCheckBox[row][col];
         } catch (IOException e) {
@@ -110,6 +110,7 @@ public class user_booking extends JFrame {
         check_row = new ArrayList<>();
         r1 = new JRadioButton("Yes");
         r2 = new JRadioButton("No");
+        r2.setSelected(true);
         r1.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 insurance = 2;
@@ -369,6 +370,9 @@ public class user_booking extends JFrame {
             cancel.write(info[3]);
             cancel.newLine();
             cancel.write(plate);
+            cancel.newLine();
+            int cr = check_row.size();
+            cancel.write(String.valueOf(cr));
             cancel.newLine();
             for (int i = 0; i < check_row.size(); i++) {
                 cancel.write(check_row.get(i) + " " + check_col.get(i));
