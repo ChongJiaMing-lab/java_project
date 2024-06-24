@@ -14,7 +14,7 @@ public class add_schdule extends JFrame {
     private JTable scheduleTable;
     private DefaultTableModel tableModel;
     private JButton addButton, editButton, deleteButton, returnButton;
-    private final String FILE_NAME = "src/schdule.txt"; 
+    private final String FILE_NAME = "src/schdule.txt";
     private JPanel controlPanel;
 
     public static void main(String[] args) {
@@ -38,8 +38,9 @@ public class add_schdule extends JFrame {
         deleteButton = new JButton("Delete Schedule");
         returnButton = new JButton("Go Back");
         returnButton.addActionListener(e -> {
-            admin_menu menu = new admin_menu();
-            menu.setVisible(true);
+
+            admin_menu menu = new admin_menu();   
+            menu.setVisible(true);  
             dispose();
         });
         setLayout(new BorderLayout());
@@ -104,39 +105,45 @@ public class add_schdule extends JFrame {
             try {
                 Date date = dateFormat.parse(dateStr + " " + time);
                 double price = Double.parseDouble(priceStr);
-
-                JRadioButton bigButton = new JRadioButton("Big");
-                JRadioButton smallButton = new JRadioButton("Small");
-                ButtonGroup sizeGroup = new ButtonGroup();
-                sizeGroup.add(bigButton);
-                sizeGroup.add(smallButton);
-                JPanel busSizePanel = new JPanel();
-                busSizePanel.add(bigButton);
-                busSizePanel.add(smallButton);
-
-                int option = JOptionPane.showConfirmDialog(this, busSizePanel, "Choose bus size", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-                if (option == JOptionPane.OK_OPTION) {
-                    int rows, cols;
-                    if (bigButton.isSelected()) {
-                        rows = 10;
-                        cols = 4;
-                    } else if (smallButton.isSelected()) {
-                        rows = 10;
-                        cols = 3;
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Please select bus size.");
-                        return null;
-                    }
-
-                    int[][] seats = new int[rows][cols];
-                    for (int i = 0; i < rows; i++) {
-                        for (int j = 0; j < cols; j++) {
-                            seats[i][j] = 0;
-                        }
-                    }
-                    JOptionPane.showMessageDialog(this, "Add Schedule Successful.");
-                    return new Schedule(busPlate, date, from, to, price, seats, status);
+                
+                JRadioButton bigbutton=new JRadioButton("3*10");    
+                JRadioButton smallbutton=new JRadioButton("4*10");
+                ButtonGroup sg=new ButtonGroup();
+                sg.add(bigbutton);
+                sg.add(smallbutton);
+                JPanel bussize = new JPanel();
+                bussize.add(bigbutton);
+                bussize.add(smallbutton);
+                
+                JOptionPane.showConfirmDialog(this, bussize, "Choose bus size", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                
+                int rows = 0;
+                int cols = 0;
+                if(bigbutton.isSelected())
+                {
+                    rows = 10;
+                    cols = 4;
                 }
+                else if(smallbutton.isSelected())
+                {
+                    rows = 10;
+                    cols = 3;
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "Please select bus size.");
+                    return null;
+                }
+                
+                int[][] seats = new int[rows][cols];
+                for (int i = 0; i < rows; i++) {
+                    for (int j = 0; j < cols; j++) {
+                        seats[i][j] = 0;
+                    }
+                }
+                JOptionPane.showMessageDialog(this, "Add Schedule Successful.");
+                return new Schedule(busPlate, date, from, to, price, seats, status);
+                
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Invalid input format. Schedule not added.");
             }
@@ -145,66 +152,33 @@ public class add_schdule extends JFrame {
     }
 
     private void editSchedule(Schedule s) {
-    String newBusPlate = JOptionPane.showInputDialog(this, "Enter new bus plate:", s.getBusPlate());
-    if (newBusPlate != null && !newBusPlate.trim().isEmpty()) {
-        String newDateStr = JOptionPane.showInputDialog(this, "Enter new date (yyyy-MM-dd):", new SimpleDateFormat("yyyy-MM-dd").format(s.getDate()));
-        String newTime = JOptionPane.showInputDialog(this, "Enter new time (HH:mm):", new SimpleDateFormat("HH:mm").format(s.getDate()));
-        String newFrom = JOptionPane.showInputDialog(this, "Enter new departure location:", s.getFrom());
-        String newTo = JOptionPane.showInputDialog(this, "Enter new destination:", s.getTo());
-        String newPriceStr = JOptionPane.showInputDialog(this, "Enter new price:", String.valueOf(s.getPrice()));
-        String newStatus = JOptionPane.showInputDialog(this, "Enter new status (done/not done):", s.getStatus());
+        String newBusPlate = JOptionPane.showInputDialog(this, "Enter new bus plate:", s.getBusPlate());
+        if (newBusPlate != null && !newBusPlate.trim().isEmpty()) {
+            String newDateStr = JOptionPane.showInputDialog(this, "Enter new date (yyyy-MM-dd):", new SimpleDateFormat("yyyy-MM-dd").format(s.getDate()));
+            String newTime = JOptionPane.showInputDialog(this, "Enter new time (HH:mm):", new SimpleDateFormat("HH:mm").format(s.getDate()));
+            String newFrom = JOptionPane.showInputDialog(this, "Enter new departure location:", s.getFrom());
+            String newTo = JOptionPane.showInputDialog(this, "Enter new destination:", s.getTo());
+            String newPriceStr = JOptionPane.showInputDialog(this, "Enter new price:", String.valueOf(s.getPrice()));
+            String newStatus = JOptionPane.showInputDialog(this, "Enter new status (done/not done):", s.getStatus());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        try {
-            Date newDate = dateFormat.parse(newDateStr + " " + newTime);
-            double newPrice = Double.parseDouble(newPriceStr);
-
-            
-            String oldBusPlate = s.getBusPlate();
-
-          
-            s.setBusPlate(newBusPlate);
-            s.setDate(newDate);
-            s.setFrom(newFrom);
-            s.setTo(newTo);
-            s.setPrice(newPrice);
-            s.setStatus(newStatus);
-
-            
-            scheduleList.remove(s); 
-            scheduleList.add(s);    
-
-           
-            saveScheduleToFile();
-
-           
-            if (!oldBusPlate.equals(newBusPlate)) {
-                renameScheduleFile(oldBusPlate, newBusPlate);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date newDate = dateFormat.parse(newDateStr + " " + newTime);
+                double newPrice = Double.parseDouble(newPriceStr);
+                s.setBusPlate(newBusPlate);
+                s.setDate(newDate);
+                s.setFrom(newFrom);
+                s.setTo(newTo);
+                s.setPrice(newPrice);
+                s.setStatus(newStatus);
+                JOptionPane.showMessageDialog(this, "Edit Successful.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Invalid date format. Schedule not edited.");
             }
-
-            JOptionPane.showMessageDialog(this, "Edit Successful.");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Invalid date format. Schedule not edited.");
         }
     }
-}
-
-private void renameScheduleFile(String oldBusPlate, String newBusPlate) {
-    String oldFileName = "src/schedule_bus/" + oldBusPlate + ".txt";
-    String newFileName = "src/schedule_bus/" + newBusPlate + ".txt";
-    File oldFile = new File(oldFileName);
-    File newFile = new File(newFileName);
-    if (oldFile.exists()) {
-        if (oldFile.renameTo(newFile)) {
-            JOptionPane.showMessageDialog(this, "File renamed successfully.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to rename file.");
-        }
-    } else {
-        JOptionPane.showMessageDialog(this, "File not found for renaming.");
-    }
-}
-
+    
+   
     private void updateScheduleTable() {
         tableModel.setRowCount(0);
         for (Schedule s : scheduleList) {
@@ -253,11 +227,10 @@ private void renameScheduleFile(String oldBusPlate, String newBusPlate) {
         File file = new File(busPlateFileName);
         if (file.exists() && !file.delete()) {
             JOptionPane.showMessageDialog(this, "Error deleting schedule file for " + s.getBusPlate());
-        } else {
-            scheduleList.remove(s);
-            updateScheduleTable();
-            saveScheduleToFile();
-            JOptionPane.showMessageDialog(this, "Delete Schedule Successful.");
+        }
+        else
+        {
+             JOptionPane.showMessageDialog(this, "Delete Schedule Successful.");
         }
     }
 }
@@ -376,6 +349,8 @@ class Schedule {
         sb.append(status).append(System.lineSeparator());
         return sb.toString().trim();
     }
+
+    
 }
 
 class ScheduledFromFile extends Schedule {
