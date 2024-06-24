@@ -1,10 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class admin_menu extends JFrame {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new admin_menu().setVisible(true));
+         SwingUtilities.invokeLater(() -> new admin_menu().setVisible(true));
     }
 
     public admin_menu() {
@@ -36,58 +38,63 @@ public class admin_menu extends JFrame {
         topPanel.add(subTitleLabel, BorderLayout.CENTER);
 
         JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.LIGHT_GRAY);
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBackground(Color.LIGHT_GRAY); 
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); 
 
         JButton button1 = new JButton("Add and view schedule");
         button1.addActionListener(e -> {
-            add_schdule addScheduleWindow = new add_schdule();
+            add_schdule addScheduleWindow = new add_schdule();   
             addScheduleWindow.setVisible(true);
             dispose();
         });
 
-        JButton buttonViewSeat = new JButton("View Seat");
-        buttonViewSeat.addActionListener(e -> {
+        JButton button2 = new JButton("View Seat");
+        button2.addActionListener(e -> {
             admin_viewseat viewSeatWindow = new admin_viewseat();
             viewSeatWindow.setVisible(true);
             dispose();
         });
 
-        JButton buttonEditSeat = new JButton("Edit Seat");
-        buttonEditSeat.addActionListener(e -> {
+        JButton button3 = new JButton("Edit Seat");
+        button3.addActionListener(e -> {
             admin_editseat editSeatWindow = new admin_editseat();
             editSeatWindow.setVisible(true);
             dispose();
         });
 
-        JButton button3 = new JButton("View user information");
-        button3.addActionListener(e -> {
-            View_Customer_information vui = new View_Customer_information();
+        JButton button4 = new JButton("View user information");
+        button4.addActionListener(e -> {
+            View_Customer_information vui = new View_Customer_information();   
             vui.setVisible(true);
             dispose();
         });
 
-        JButton button4 = new JButton("View user booking");
+        JButton button5 = new JButton("View user booking");
+        button5.addActionListener(e -> {
+            booking_view bookingViewWindow = new booking_view();
+            bookingViewWindow.setVisible(true);
+            dispose();
+        });
 
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        buttonViewSeat.setAlignmentX(Component.CENTER_ALIGNMENT);
-        buttonEditSeat.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button3.setAlignmentX(Component.CENTER_ALIGNMENT);
         button4.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button5.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button1);
         mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(buttonViewSeat);
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(buttonEditSeat);
+        mainPanel.add(button2);
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button3);
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(button4);
         mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(button5);
+        mainPanel.add(Box.createVerticalStrut(20));
 
         add(topPanel, BorderLayout.NORTH);
-        add(mainPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.CENTER);   
     }
 }
