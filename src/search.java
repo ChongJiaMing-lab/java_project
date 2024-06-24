@@ -13,7 +13,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 public class search extends JFrame implements ActionListener{
     private JLabel lbTitle,lb1,lb2,lb3,lb4;
-    private JButton bt1;
+    private JButton bt1,bt2;
     private JComboBox cb1,cb2;
     private JTextField tf1;
     
@@ -42,7 +42,8 @@ public class search extends JFrame implements ActionListener{
         lb2 = new JLabel("To :"); lb2 = new JLabel("To :");
         lb3 = new JLabel("Date (YYYY-MM-DD):");
         lb4 = new JLabel(" ");
-        bt1 = new JButton("Search");
+        bt1 = new JButton("Back to Menu");
+        bt2 = new JButton("Search");
         tf1 = new JTextField(10);
         
         JPanel pTitle = new JPanel();
@@ -77,16 +78,20 @@ public class search extends JFrame implements ActionListener{
         
         JPanel p2 = new JPanel(new GridLayout(2,1));
         p2.add(bt1);
+        p2.add(bt2);
         add(pTitle,BorderLayout.NORTH);
         add(p1,BorderLayout.CENTER);
         add(p2,BorderLayout.SOUTH);
         bt1.addActionListener(this);
+        bt2.addActionListener(this);
     }
     
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        String from = cb1.getSelectedItem().toString();
+        if(e.getSource()==bt2)
+        {
+            String from = cb1.getSelectedItem().toString();
         String to = cb2.getSelectedItem().toString();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try{
@@ -101,6 +106,13 @@ public class search extends JFrame implements ActionListener{
         catch(Exception f)
         {
             lb4.setText("Invalid Date Format");
+        }
+        }
+        else if(e.getSource()==bt1)
+        {
+            user_menu u2 = new user_menu();
+            u2.setVisible(true);
+            dispose();
         }
     }
 }

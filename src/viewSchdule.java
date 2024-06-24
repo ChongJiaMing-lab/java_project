@@ -28,7 +28,7 @@ public class viewSchdule extends JFrame implements ActionListener {
     private java.util.List<Schedule> scheduleList = new ArrayList<>();
     private JTable scheduleTable;
     private DefaultTableModel tableModel;
-    private JButton addButton;
+    private JButton addButton,bt2;
     private final String FILE_NAME = "src/schdule.txt";
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -54,16 +54,19 @@ public class viewSchdule extends JFrame implements ActionListener {
         tableModel = new DefaultTableModel(columnNames, 0);
         scheduleTable = new JTable(tableModel);
         addButton = new JButton("Book ticket");
+        bt2 = new JButton("Back to Menu");
 
         loadScheduleFromFile(from, to, date);
 
         setLayout(new BorderLayout());
         JPanel controlPanel = new JPanel(new FlowLayout());
+        controlPanel.add(bt2);
         controlPanel.add(addButton);
 
         add(new JScrollPane(scheduleTable), BorderLayout.CENTER);
         add(controlPanel, BorderLayout.SOUTH);
 
+        bt2.addActionListener(this);
         addButton.addActionListener(this);
 
     }
@@ -110,6 +113,12 @@ public class viewSchdule extends JFrame implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Please select one bus。");
             }
+        }
+        else if(e.getSource()==bt2)
+        {
+            user_menu u2 = new user_menu();
+            u2.setVisible(true);
+            dispose();
         }
     }
 }

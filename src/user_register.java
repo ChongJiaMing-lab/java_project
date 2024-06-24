@@ -128,6 +128,7 @@ public class user_register extends JFrame implements ActionListener{
         add(pAlert,BorderLayout.SOUTH);
         
         bt1.addActionListener(this);
+        bt2.addActionListener(this);
     }
     
     public void createFile()
@@ -226,6 +227,8 @@ public class user_register extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        if(e.getSource()==bt1)
+        {
         String name = tf1.getText();
         String PH = tf2.getText();
         String email = tf3.getText();
@@ -265,7 +268,7 @@ public class user_register extends JFrame implements ActionListener{
             createFile();
             if(checkMail(email))
             {
-                lb7.setText(" ");
+                lb7.setText("Register successfully.");
                 writeFile(name,PH,email,password);
             }
             else
@@ -275,4 +278,12 @@ public class user_register extends JFrame implements ActionListener{
             
         }
     }
+            else if(e.getSource()==bt2)
+    {
+        user_login u2 = new user_login();
+            u2.setVisible(true);
+            dispose();
+    }
+    }
+
 }
