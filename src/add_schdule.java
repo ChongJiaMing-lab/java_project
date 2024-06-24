@@ -106,8 +106,8 @@ public class add_schdule extends JFrame {
                 Date date = dateFormat.parse(dateStr + " " + time);
                 double price = Double.parseDouble(priceStr);
                 
-                JRadioButton bigbutton=new JRadioButton("Big");    
-                JRadioButton smallbutton=new JRadioButton("Small");
+                JRadioButton bigbutton=new JRadioButton("3*10");    
+                JRadioButton smallbutton=new JRadioButton("4*10");
                 ButtonGroup sg=new ButtonGroup();
                 sg.add(bigbutton);
                 sg.add(smallbutton);
@@ -177,7 +177,8 @@ public class add_schdule extends JFrame {
             }
         }
     }
-
+    
+   
     private void updateScheduleTable() {
         tableModel.setRowCount(0);
         for (Schedule s : scheduleList) {
@@ -200,7 +201,7 @@ public class add_schdule extends JFrame {
     private void loadScheduleFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             Schedule s;
-            while ((s = Schedule.fromFileString(reader)) != null) {
+            while ((s = ScheduledFromFile.fromFileString(reader)) != null) {
                 scheduleList.add(s);
             }
             updateScheduleTable();
@@ -349,22 +350,27 @@ class Schedule {
         return sb.toString().trim();
     }
 
-    public static Schedule fromFileString(BufferedReader reader) {
+    
+}
+
+class ScheduledFromFile extends Schedule {
+    public ScheduledFromFile(String busPlate, Date date, String from, String to, double price, int[][] seats, String status) {
+        super(busPlate, date, from, to, price, seats, status);
+    }
+
+    public static ScheduledFromFile fromFileString(BufferedReader reader) {
         try {
             String busPlate = reader.readLine();
             if (busPlate == null || busPlate.trim().isEmpty()) {
                 return null;
             }
 
-            String dateStr = reader.readLine();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date date = dateFormat.parse(reader.readLine());
             String from = reader.readLine();
             String to = reader.readLine();
-            String priceStr = reader.readLine();
+            double price = Double.parseDouble(reader.readLine());
             String status = reader.readLine();
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date = dateFormat.parse(dateStr);
-            double price = Double.parseDouble(priceStr);
 
             List<int[]> seatList = new ArrayList<>();
             String line;
@@ -378,7 +384,7 @@ class Schedule {
             }
 
             int[][] seats = seatList.toArray(new int[0][]);
-            return new Schedule(busPlate, date, from, to, price, seats, status);
+            return new ScheduledFromFile(busPlate, date, from, to, price, seats, status);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,11 +1,13 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import javax.swing.border.Border;
 
 public class user_booking extends JFrame {
 
@@ -16,12 +18,13 @@ public class user_booking extends JFrame {
     private static int col = 0;
     private ArrayList<Integer> check_row, check_col;
     private JButton submit;
+    private JButton back;
     private int[][] seat;
     ImageIcon seat_select, av, unav;
     private JTable j;
     private String[] info = new String[6];
-    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t, lbi1, lbi2;
-    private JLabel lb9, lb10, lb11, lb12;
+    private JLabel lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, t, lbi1, lbi2, lbi3;
+    private JLabel lb9, lb10, lb11, lb12, lb13;
     private double price;
     private JTextField t1, t2, t3, t4;
     private double price_total;
@@ -30,26 +33,22 @@ public class user_booking extends JFrame {
     private JRadioButton r1, r2;
     private int total_pass = 0;
     private double insurance = 0;
-    
+
     public static void main(String[] args) {
+        user_booking u = new user_booking("qwe123");
+        u.setVisible(true);
     }
 
     public user_booking(String plate) {
         current_id = user_login.current_id;
+        current_id = "jiaming@g.com";
         System.out.println(current_id);
-        get_bus = "src/schedule_bus/"+plate+".txt";
+        get_bus = "src/schedule_bus/" + plate + ".txt";
         setSize(800, 700);
         setTitle("User Booking");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        user_booking f = new user_booking();
-        f.setSize(800, 700);
-        f.setTitle("User Booking");
-        f.setVisible(true);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    public user_booking() {
+        setVisible(true);
         DecimalFormat df = new DecimalFormat("0.00");
         seat_select = new ImageIcon("src/image/seat_select.png");
         av = new ImageIcon("src/image/seat_av.png");
@@ -100,7 +99,7 @@ public class user_booking extends JFrame {
                         seat[i][j] = Integer.parseInt(n[j]);
                     }
                 }
-                System.out.println(Arrays.deepToString(seat));
+                System.out.println("texsting: " + Arrays.deepToString(seat));
             }
             j1 = new JCheckBox[row][col];
         } catch (IOException e) {
@@ -109,6 +108,24 @@ public class user_booking extends JFrame {
 
         check_col = new ArrayList<>();
         check_row = new ArrayList<>();
+        r1 = new JRadioButton("Yes");
+        r2 = new JRadioButton("No");
+        r2.setSelected(true);
+        r1.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                insurance = 2;
+            } else {
+                insurance = 0;
+            }
+            updateTotal();
+        });
+
+        r2.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                insurance = 0;
+            }
+            updateTotal();
+        });
         for (int j = 0; j < j1.length; j++) {
             for (int k = 0; k < j1[j].length; k++) {
                 int r = j;
@@ -121,7 +138,7 @@ public class user_booking extends JFrame {
                 } else {
                     j1[j][k].setIcon(av);
                 }
-                
+
                 price_total = 0.0;
                 total_pass = 0;
                 j1[j][k].addActionListener((e) -> {
@@ -131,35 +148,17 @@ public class user_booking extends JFrame {
                         check_col.add(c);
                         j1[r][c].setIcon(seat_select);
                         total_pass += 1;
-                        price_total = total_pass * price;
-                        if (r1.isSelected()) {
-                            insurance = 2;
-                        } else {
-                            insurance = 0;
-                        }
-                        t2.setText("" + total_pass);
-                        t3.setText("RM " + String.valueOf(df.format(price_total)));
-                        t4_total = price_total + insurance;
-                        t4.setText("RM " + String.valueOf(df.format(t4_total)));
                         System.out.println("Checkbox at (" + r + ", " + c + ") is selected");
                     } else {
                         int index = check_row.indexOf(r);
-                            check_row.remove(index);
-                            check_col.remove(index);
-                            j1[r][c].setIcon(av);
-                            total_pass -= 1;
-                            price_total -= price;
-                            if (r1.isSelected()) {
-                                insurance = 2;
-                            } else {
-                                insurance = 0;
-                            }
-                            t2.setText("" + total_pass);
-                            t3.setText("RM " + String.valueOf(df.format(price_total)));
-                            t4_total = price_total + insurance;
-                            t4.setText("RM " + String.valueOf(df.format(t4_total)));
-                        System.out.println("Checkbox at (" + r + ", " + c + ") is un-selected");
+                        check_row.remove(index);
+                        check_col.remove(index);
+                        j1[r][c].setIcon(av);
+                        total_pass -= 1;
+                        System.out.println("Checkbox at (" + r + ", " + c + ") is unselected");
                     }
+                    price_total = total_pass * price;
+                    updateTotal();
                 });
             }
         }
@@ -212,14 +211,17 @@ public class user_booking extends JFrame {
 
         t = new JLabel("Book a Seat");
         t.setFont(f1);
+        t.setForeground(Color.WHITE);
         JPanel title = new JPanel();
         title.add(t);
 
         JPanel p2 = new JPanel(new GridLayout(4, 1));
-        JPanel sp2 = new JPanel();
+        JPanel sp2 = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
         JPanel sp222 = new JPanel(new GridLayout(5, 1));
         lb1 = new JLabel("Available");
         lb2 = new JLabel("Unavailable");
+        lb13 = new JLabel("Selected");
         lb3 = new JLabel("Ticket Price : RM" + df.format(price));
         lb9 = new JLabel("Car Plate: " + info[0]);
         lb10 = new JLabel("Boarding Time: " + info[1]);
@@ -230,24 +232,41 @@ public class user_booking extends JFrame {
         sp222.add(lb10);
         sp222.add(lb11);
         sp222.add(lb12);
+        Border blackline = BorderFactory.createLineBorder(Color.black);
+        sp222.setBorder(blackline);
         lbi1 = new JLabel(av);
         lbi2 = new JLabel(unav);
-        sp2.add(lb1);
-        sp2.add(lbi1);
-        sp2.add(lb2);
-        sp2.add(lbi2);
-//        sp2.add(lb3);
+        lbi3 = new JLabel(seat_select);
+//        gbc.gridx = 10;
+//        gbc.gridy = GridBagConstraints.RELATIVE;
+//        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(0, 0, 20, 20); // Add some space between rows
+
+        sp2.add(lb1, gbc);
+        sp2.add(lbi1, gbc);
+        sp2.add(lb2, gbc);
+        sp2.add(lbi2, gbc);
+        sp2.add(lb13, gbc);
+        sp2.add(lbi3, gbc);
+
         Font f2 = new Font("Calibri", Font.BOLD, 20);
         Font f3 = new Font("Calibri", Font.PLAIN, 30);
         JPanel sp22 = new JPanel(new GridLayout(4, 2));
+        back = new JButton("Cancel");
         submit = new JButton("Confirm");
+        back.addActionListener(e -> {
+            search s = new search();
+            s.setVisible(true);
+            dispose();
+        });
+        submit.setEnabled(false);
         JPanel p_b = new JPanel();
         p_b.add(submit);
+        p_b.add(back);
 //        lb3.setFont(f3);
 
         bg1 = new ButtonGroup();
-        r1 = new JRadioButton("Yes");
-        r2 = new JRadioButton("No");
+
         bg1.add(r1);
         bg1.add(r2);
         lb4 = new JLabel("Travel Insurance?(RM2):");
@@ -290,27 +309,33 @@ public class user_booking extends JFrame {
         p2.add(p_b);
 //        p2.setFont(f2);
         add(lp, BorderLayout.WEST);
+        title.setBackground(Color.black);
+        title.setForeground(Color.WHITE);
         add(title, BorderLayout.NORTH);
         add(p2, BorderLayout.EAST);
 
         submit.addActionListener((e) -> {
-            confirm_selection();
+            confirm_selection(plate);
         });
-//        
-//         r1.addActionListener((e) -> {
-//            if(r1.isSelected())
-//            {
-//                insurance =2;
-//            }
-//            else
-//            {
-//                insurance = 0;
-//            }
-//        });
 
     }
 
-    public void confirm_selection() {
+    private void updateTotal() {
+        DecimalFormat df = new DecimalFormat("0.00");
+        t2.setText("" + total_pass);
+        t3.setText("RM " + String.valueOf(df.format(price_total)));
+        t4_total = price_total + insurance;
+        t4.setText("RM " + String.valueOf(df.format(t4_total)));
+        if (total_pass > 0) {
+            submit.setEnabled(true);
+        } else {
+            submit.setEnabled(false);
+        }
+
+    }
+
+    public void confirm_selection(String plate) {
+        JOptionPane.showMessageDialog(this, "Success to book the bus");
         System.out.println("The position you have selected is :");
         System.out.println("(" + check_row + ", " + check_col + ")");
         for (int i = 0; i < check_row.size(); i++) {
@@ -320,7 +345,7 @@ public class user_booking extends JFrame {
         try {
             FileWriter write = new FileWriter(get_bus);
             BufferedWriter book = new BufferedWriter(write);
-            
+
             for (int m = 0; m < 6; m++) {
                 book.write(info[m]);
                 book.newLine();
@@ -334,15 +359,30 @@ public class user_booking extends JFrame {
                 }
                 book.newLine();
             }
-            FileWriter write2 = new FileWriter("src/user_booking.txt");
+            FileWriter write2 = new FileWriter("src/user_booking.txt", true);
             BufferedWriter cancel = new BufferedWriter(write2);
             cancel.write(current_id);
-            cancel.write(get_bus);
+            cancel.newLine();
+            cancel.write(info[1]);
+            cancel.newLine();
+            cancel.write(info[2]);
+            cancel.newLine();
+            cancel.write(info[3]);
+            cancel.newLine();
+            cancel.write(plate);
+            cancel.newLine();
+            int cr = check_row.size();
+            cancel.write(String.valueOf(cr));
+            cancel.newLine();
             for (int i = 0; i < check_row.size(); i++) {
-                cancel.write(check_row.get(i)+" "+check_col.get(i));
+                cancel.write(check_row.get(i) + " " + check_col.get(i));
+                cancel.newLine();
             }
             book.close();
-            System.out.println("Success to book the seat.");
+            cancel.close();
+            user_menu um = new user_menu();
+            um.setVisible(true);
+            dispose();
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

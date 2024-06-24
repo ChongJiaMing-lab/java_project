@@ -79,11 +79,17 @@ public class admin_viewseat extends JFrame {
     }
 
     private void loadCarPlates() {
-        try (Scanner s = new Scanner(new File("src/schedule_bus/bus_plate.txt"))) {
+        try (Scanner s = new Scanner(new File("src/schdule.txt"))) {
             while (s.hasNextLine()) {
                 String carPlate = s.nextLine().trim();
-                if (!carPlate.isEmpty()) {
-                    carPlateList.add(carPlate);
+                carPlateList.add(carPlate);
+                // Skip the next 5 lines (date, from, to, price, status)
+                for (int i = 0; i < 6; i++) 
+                {
+                    if (s.hasNextLine()) 
+                    {
+                        s.nextLine();
+                    }
                 }
             }
         } catch (IOException e) {
@@ -236,7 +242,7 @@ public class admin_viewseat extends JFrame {
         }
     }
 
-       public static void main(String[] args) {
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             admin_viewseat frame = new admin_viewseat();
             frame.setVisible(true);
