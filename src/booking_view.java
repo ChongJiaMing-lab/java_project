@@ -49,22 +49,36 @@ public class booking_view extends JFrame {
                 String from = reader.readLine();
                 String destination = reader.readLine();
                 String busPlate = reader.readLine();
-                String seat = reader.readLine();
+                String numberOfSeatsLine = reader.readLine();
 
                 // Check if all required lines are present
                 if (userEmail != null && busDateTime != null && from != null &&
-                    destination != null && busPlate != null && seat != null) {
+                    destination != null && busPlate != null && numberOfSeatsLine != null) {
 
-                    // Check if seat information is properly formatted
-                    String[] seatParts = seat.split(" ");
-                    if (seatParts.length == 2) {
-                        String seatRow = seatParts[0];
-                        String seatColumn = seatParts[1];
+                    int numberOfSeats;
+                    try {
+                        numberOfSeats = Integer.parseInt(numberOfSeatsLine);
+                    } catch (NumberFormatException e) {
+                        System.err.println("Invalid number of seats format: " + numberOfSeatsLine);
+                        continue;
+                    }
 
-                        // Add a row to the table model
-                        tableModel.addRow(new Object[]{userEmail, busDateTime, from, destination, busPlate, seatRow, seatColumn});
-                    } else {
-                        System.err.println("Invalid seat format: " + seat);
+                    for (int i = 0; i < numberOfSeats; i++) {
+                        String seat = reader.readLine();
+                        if (seat != null) {
+                            String[] seatParts = seat.split(" ");
+                            if (seatParts.length == 2) {
+                                String seatRow = seatParts[0];
+                                String seatColumn = seatParts[1];
+
+                                // Add a row to the table model
+                                tableModel.addRow(new Object[]{userEmail, busDateTime, from, destination, busPlate, seatRow, seatColumn});
+                            } else {
+                                System.err.println("Invalid seat format: " + seat);
+                            }
+                        } else {
+                            System.err.println("Missing seat information for booking.");
+                        }
                     }
                 } else {
                     System.err.println("Missing booking information in file.");
