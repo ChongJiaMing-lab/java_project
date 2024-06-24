@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 JKK 6448
 2024-07-02 23:00
 SELANGOR
@@ -19,3 +20,5 @@ PENANG
 28.0
 not done
 
+=======
+>>>>>>> af5aeca705269b6088be5c5955102e1ae5c5f6c2
