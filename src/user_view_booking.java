@@ -1,4 +1,3 @@
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -23,8 +22,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author User
  */
-public class viewSchdule extends JFrame implements ActionListener {
-
+public class user_view_booking extends JFrame implements ActionListener {
     private java.util.List<Schedule> scheduleList = new ArrayList<>();
     private JTable scheduleTable;
     private DefaultTableModel tableModel;
@@ -37,7 +35,7 @@ public class viewSchdule extends JFrame implements ActionListener {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String inputDate = "2023-06-29";
             Date date = dateFormat.parse(inputDate);
-            viewSchdule v = new viewSchdule("MELAKA", "PENANG", date);
+            viewSchdule v = new viewSchdule("", "", date);
             v.setVisible(true);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -115,7 +113,6 @@ public class viewSchdule extends JFrame implements ActionListener {
 }
 
 class Schedule {
-
     private String busPlate;
     private Date date;
     private String from;
@@ -200,3 +197,5 @@ class Schedule {
         return null;
     }
 }
+
+

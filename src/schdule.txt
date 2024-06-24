@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 qwe123
 2024-12-12 12:12
 weq
@@ -5,3 +6,29 @@ qw
 20.0
 not done
 
+=======
+<<<<<<< HEAD
+JKK 6448
+2024-07-02 23:00
+SELANGOR
+JOHOR
+20.0
+not done
+
+jke6453
+2024-07-02 00:30
+JOHOR BAHRU
+MELAKA
+25.0
+not done
+
+JRQ 61544
+2023-06-29 18:30
+MELAKA
+PENANG
+28.0
+not done
+
+=======
+>>>>>>> af5aeca705269b6088be5c5955102e1ae5c5f6c2
+>>>>>>> 574ad10f1a91bf7e5de509662d95e9458bdda389
