@@ -345,6 +345,12 @@ public class user_booking extends JFrame {
             BufferedWriter cancel = new BufferedWriter(write2);
             cancel.write(current_id);
             cancel.newLine();
+            cancel.write(info[1]);
+            cancel.newLine();
+             cancel.write(info[2]);
+            cancel.newLine();
+             cancel.write(info[3]);
+            cancel.newLine();
             cancel.write(plate);
             cancel.newLine();
             for (int i = 0; i < check_row.size(); i++) {
