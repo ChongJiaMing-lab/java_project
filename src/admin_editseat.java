@@ -118,11 +118,16 @@ public class admin_editseat extends JFrame {
     }
 
     private void loadCarPlates() {
-        try (Scanner s = new Scanner(new File("src/schedule_bus/bus_plate.txt"))) {
+        try (Scanner s = new Scanner(new File("src/schdule.txt"))) {
             while (s.hasNextLine()) {
                 String carPlate = s.nextLine().trim();
-                if (!carPlate.isEmpty()) {
-                    carPlateComboBox.addItem(carPlate);
+                carPlateComboBox.addItem(carPlate);
+                for (int i = 0; i < 6; i++) 
+                {
+                    if (s.hasNextLine()) 
+                    {
+                        s.nextLine();
+                    }
                 }
             }
         } catch (IOException e) {
