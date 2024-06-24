@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -6,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class user_view_booking extends JFrame {
+
     private JTable table;
     private DefaultTableModel tableModel;
+    private List<String[]> bookingData;
+    private ArrayList<String> check_row, check_col;
 
     public user_view_booking() {
         setTitle("Display Booking Data");
@@ -15,41 +19,44 @@ public class user_view_booking extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
 
-        String[] columnNames = {"Bus Plate", "Password","Boarding Time", "From", "To","Row", "Column"};
+        String[] columnNames = {"Email", "Boarding Time", "From", "To", "Password", "Row", "Column"};
 
         tableModel = new DefaultTableModel(columnNames, 0);
 
         table = new JTable(tableModel);
 
+        bookingData = new ArrayList<>();
+
         loadDataFromFile("src/user_booking.txt");
 
         add(new JScrollPane(table), BorderLayout.CENTER);
+
+        JButton viewSeatButton = new JButton("View Seat");
+//        viewSeatButton.addActionListener(e -> view_seat());
+        add(viewSeatButton, BorderLayout.SOUTH);
     }
 
     private void loadDataFromFile(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
-            List<String[]> bookingData = new ArrayList<>();
-
+            String line2;
+            int c=0;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("@")) {
                     String email = line;
-                    String password = reader.readLine();
+                    String boardingTime = reader.readLine();
                     String from = reader.readLine();
                     String to = reader.readLine();
-                    String plate = reader.readLine();
-                    while ((line = reader.readLine()) != null && !line.contains("@")) {
-                        String[] parts = line.split(" ");
-                        if (parts.length == 2) {
-                            bookingData.add(new String[]{email, password, from, to ,plate,parts[0], parts[1]});
-                        }
+                    String password = reader.readLine();
+                    List<String[]> seatData = new ArrayList<>();
+                    while ((line2 = reader.readLine())!=null && !line.contains("@")) {
+//                        String row_col = reader.readLine();
+                        String[] parts = line2.split(" ");
+                        seatData.add(parts);
+                        c += 1;
                     }
+                    System.out.println("Number of seats for " + email + ": " + c);
                 }
-            }
-            
-            // Add rows to the table model
-            for (String[] rowData : bookingData) {
-                tableModel.addRow(rowData);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,7 +65,7 @@ public class user_view_booking extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-           user_view_booking displayTable = new user_view_booking();
+            user_view_booking displayTable = new user_view_booking();
             displayTable.setVisible(true);
         });
     }

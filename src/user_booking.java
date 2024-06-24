@@ -99,7 +99,7 @@ public class user_booking extends JFrame {
                         seat[i][j] = Integer.parseInt(n[j]);
                     }
                 }
-                System.out.println(Arrays.deepToString(seat));
+                System.out.println("texsting: "+Arrays.deepToString(seat));
             }
             j1 = new JCheckBox[row][col];
         } catch (IOException e) {
