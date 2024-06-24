@@ -159,10 +159,10 @@ public class add_schdule extends JFrame {
             Date newDate = dateFormat.parse(newDateStr + " " + newTime);
             double newPrice = Double.parseDouble(newPriceStr);
 
-            // Before setting new values, store old busPlate
+            
             String oldBusPlate = s.getBusPlate();
 
-            // Set new values
+          
             s.setBusPlate(newBusPlate);
             s.setDate(newDate);
             s.setFrom(newFrom);
