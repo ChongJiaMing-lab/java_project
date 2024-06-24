@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 KEK 6154
 2024-06-27 12:00
 SELANGOR
@@ -62,5 +60,3 @@ NEGERI SEMBILAN
 MELAKA
 25.0
 not done
-
->>>>>>> e7143c99f4cc9630c0eab36a07444857eadc77cc

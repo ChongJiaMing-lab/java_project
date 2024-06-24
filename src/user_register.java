@@ -206,8 +206,6 @@ public class user_register extends JFrame implements ActionListener{
                 String email = new String(bEmailByte).trim();
                 String password = new String(bPassByte).trim();
                 
-                System.out.println("test "+name+" "+PH+" "+email+" "+password+"\n");
-                
                 if(mail.equals(email))
                 {
                     return false;
@@ -220,7 +218,6 @@ public class user_register extends JFrame implements ActionListener{
           System.out.println("An error occurred.");
           e.printStackTrace();
     }
-        System.out.println("test ");
         return true;
     }
 
@@ -280,7 +277,7 @@ public class user_register extends JFrame implements ActionListener{
     }
             else if(e.getSource()==bt2)
     {
-        user_login u2 = new user_login();
+            user_login u2 = new user_login();
             u2.setVisible(true);
             dispose();
     }

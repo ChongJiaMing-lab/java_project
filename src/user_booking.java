@@ -41,7 +41,6 @@ public class user_booking extends JFrame {
 
     public user_booking(String plate) {
         current_id = user_login.current_id;
-        current_id = "jiaming@g.com";
         System.out.println(current_id);
         get_bus = "src/schedule_bus/" + plate + ".txt";
         setSize(800, 700);
